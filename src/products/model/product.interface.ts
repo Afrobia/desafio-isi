@@ -1,7 +1,6 @@
-export interface ProductModel {
+export interface ProductInterface {
     name: string;
     description: string;
     price: number;
     stock:number;
-    createdAt: Date;
 }

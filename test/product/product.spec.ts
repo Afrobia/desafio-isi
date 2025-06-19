@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { Product } from './product';
+import { Product } from '../../src/products/model/product';
 
 describe('Product', () => {
   let model: Product;
@@ -20,7 +20,7 @@ describe('Product', () => {
     const product = new Product("Test Product", "This is a test product", 100, 50);
     if(product) {
         expect(product).toBeInstanceOf(Product);
-    }
+    };
   })
 
   test("should have the same properties as ProductModel", () => {
@@ -35,7 +35,7 @@ describe('Product', () => {
         expect(createdAt).toBeInstanceOf(Date);
         expect(updatedAt).toBeInstanceOf(Date);
         expect(deletedAt).toBeNull();
-    }
+    };
   })
 
 });
