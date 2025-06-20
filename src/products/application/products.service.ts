@@ -19,16 +19,21 @@ export class ProductsService {
     };
   }
 
-  async createProduct(productInterface: ProductInterface): Promise<ProductInterface> {
+  async createProductIfNotExists(productInterface: ProductInterface): Promise<Product | string> {
+    const { name } = this.getAtributteProduct(productInterface);
+    const productFound = await this.getProductByName(name);
+    if (productFound) {
+      throw new Error(`Product with name ${name} already exists.`);
+    }
+    return this.createProduct(productInterface);
+  }
+
+  async createProduct(productInterface: ProductInterface): Promise<Product> {
     const { name, description, price, stock } =
       this.getAtributteProduct(productInterface);
     const newProduct = new Product(name, description, price, stock);
     this.products.push(newProduct);
     return newProduct;
-  }
-
-  async getProductById(id: number): Promise<ProductInterface | null> {
-    throw new Error('Method not implemented.');
   }
 
   private async getProductByName(name: string): Promise<ProductInterface | null> {
@@ -43,6 +48,9 @@ export class ProductsService {
     return this.products;
   }
 
+  async getProductById(id: number): Promise<ProductInterface | null> {
+    throw new Error('Method not implemented.');
+  }
   async updateProduct(id: number, product: ProductInterface ): Promise<ProductInterface | null> {
     throw new Error('Method not implemented.');
   }
