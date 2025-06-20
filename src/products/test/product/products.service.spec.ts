@@ -56,16 +56,12 @@ describe('ProductsService', () => {
       `Product with name ${model.name} already exists.`,
     );
   });
-  
-  /* test('should get a attribute productInterface', async () => {
-    const productData = productInterface;
-    const result = service['getAtributteProduct'](productData);
-    expect(result).toEqual({
-      name: productData.name,
-      description: productData.description,
-      price: productData.price,
-      stock: productData.stock,
-    }); 
-  }); */
+
+  test('should return all products', async () => {
+    await service.createProduct(model);
+    const products = await service.getAllProducts();
+    expect(products).toHaveLength(1);
+    expect(products[0].name).toEqual(model.name);
+  });
 
 });
