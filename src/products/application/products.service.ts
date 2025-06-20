@@ -1,61 +1,49 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
 import { ProductInterface } from '../model/product.interface';
-import { Product } from '../model/product';
-
-
+import {
+  PRODUCT_REPO_TOKEN,
+  ProductsIRepository,
+} from '../infraestructure/db/products.repository.interface';
 
 @Injectable()
 export class ProductsService {
-  private products: Product[] = [];
+  constructor(
+    @Inject(PRODUCT_REPO_TOKEN)
+    private readonly productsRepository: ProductsIRepository,
+  ) {}
 
-  constructor() {}
-
-  private getAtributteProduct(productInterface: ProductInterface): ProductInterface {
-    return {
-      name: productInterface.name,
-      description: productInterface.description,
-      price: productInterface.price,
-      stock: productInterface.stock,
-    };
-  }
-
-  async createProductIfNotExists(productInterface: ProductInterface): Promise<Product | string> {
-    const { name } = this.getAtributteProduct(productInterface);
-    const productFound = await this.getProductByName(name);
+  async createProductIfNotExists(
+    productInterface: ProductInterface,
+  ): Promise<ProductInterface | string> {
+    const { name } = productInterface;
+    const productFound = await this.productsRepository.findProductByName(name);
     if (productFound) {
-      throw new Error(`Product with name ${name} already exists.`);
+      throw new ForbiddenException(`Product with name already exists.`);
     }
-    return this.createProduct(productInterface);
-  }
-
-  async createProduct(productInterface: ProductInterface): Promise<Product> {
-    const { name, description, price, stock } =
-      this.getAtributteProduct(productInterface);
-    const newProduct = new Product(name, description, price, stock);
-    this.products.push(newProduct);
+    const newProduct =
+      this.productsRepository.registerProduct(productInterface);
     return newProduct;
   }
 
-  private async getProductByName(name: string): Promise<ProductInterface | null> {
-    const productFound = this.products.find((product) => product.name === name);
+  public async listProducts(): Promise<ProductInterface[]> {
+    return this.productsRepository.findAllProducts();
+  }
+
+  private async getProductByName(
+    name: string,
+  ): Promise<ProductInterface | null> {
+    const productFound = await this.productsRepository.findProductByName(name);
     if (!productFound) {
-      return null;
+      throw new ForbiddenException(`Product with not found.`);
     }
     return productFound;
   }
 
-  public async getAllProducts(): Promise<ProductInterface[]> {
-    return this.products;
-  }
-
-  async getProductById(id: number): Promise<ProductInterface | null> {
-    throw new Error('Method not implemented.');
-  }
-  async updateProduct(id: number, product: ProductInterface ): Promise<ProductInterface | null> {
-    throw new Error('Method not implemented.');
-  }
-
-  private async deleteProduct(id: number): Promise<boolean> {
-    throw new Error('Method not implemented.');
+  async getProductById(id: number): Promise<ProductInterface | string> {
+    const productFound = await this.productsRepository.findProductById(id);
+    if (!productFound) {
+      throw new ForbiddenException(`Product not found.`);
+    }
+    return productFound;
   }
 }
