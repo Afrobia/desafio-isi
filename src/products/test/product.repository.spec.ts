@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProductsRepository } from '../infraestructure/repository/products.repository';
-import { ProductInterface } from '../model/product.interface';
-import { Product } from '../model/product';
+import { ProductInterface } from '../domain/product.interface';
+import { Product } from '../domain/product';
 
 Date.now = jest.fn(() => new Date(Date.UTC(2017, 1, 14)).valueOf());
 const jestId = jest.spyOn(Product.prototype, 'getId').mockImplementation(() => {

@@ -1,11 +1,14 @@
 import { Body, Controller, Get, Inject, Param, Post } from '@nestjs/common';
 import { CreateProductDto } from './create-product.dto';
-import { ProductInterface } from '../../model/product.interface';
-import { IProductsService, PRODUCT_SERVICE_TOKEN,  } from '../../../products/application/products.service.interface';
+import { ProductInterface } from '../../domain/product.interface';
+import { IProductsService, PRODUCT_SERVICE_TOKEN } from '../../application/products.service.interface';
 
 @Controller('products')
 export class ProductsController {
-  constructor(@Inject(PRODUCT_SERVICE_TOKEN) private readonly productsService: IProductsService) {}
+  constructor(
+    @Inject(PRODUCT_SERVICE_TOKEN)
+    private readonly productsService: IProductsService,
+  ) {}
 
   @Post()
   async createProduct(

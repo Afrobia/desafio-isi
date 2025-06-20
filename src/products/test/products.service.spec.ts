@@ -1,8 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProductsService } from '../application/products.service';
-import { ProductInterface } from '../model/product.interface';
-import { Product } from '../model/product';
-import { IProductsRepository, PRODUCT_REPO_TOKEN} from '../infraestructure/repository/products.repository.interface';
+import { ProductInterface } from '../domain/product.interface';
+import { Product } from '../domain/product';
+import {
+  IProductsRepository,
+  PRODUCT_REPO_TOKEN,
+} from '../infraestructure/repository/products.repository.interface';
 
 describe('ProductsService', () => {
   let service: ProductsService;
@@ -63,9 +66,7 @@ describe('ProductsService', () => {
 
   test('should return a product by id', async () => {
     const product = new Product(name, description, price, stock);
-    jest
-      .spyOn(repository, 'findProductById')
-      .mockResolvedValue(product);
+    jest.spyOn(repository, 'findProductById').mockResolvedValue(product);
     const result = await service.getProductById(product.getId());
     expect(result).toEqual(product);
   });
@@ -79,9 +80,7 @@ describe('ProductsService', () => {
 
   test('should list all products', async () => {
     const products = [new Product(name, description, price, stock)];
-    jest
-      .spyOn(repository, 'findAllProducts')
-      .mockResolvedValue(products);
+    jest.spyOn(repository, 'findAllProducts').mockResolvedValue(products);
     const result = await service.listProducts();
     expect(result).toEqual(products);
   });

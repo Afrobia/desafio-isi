@@ -1,4 +1,4 @@
-import { ProductInterface } from '../../model/product.interface';
+import { ProductInterface } from '../../domain/product.interface';
 
 export interface IProductsRepository {
   registerProduct(product: ProductInterface): Promise<ProductInterface>;

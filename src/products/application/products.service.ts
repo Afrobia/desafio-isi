@@ -1,6 +1,8 @@
 import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
-import { ProductInterface } from '../model/product.interface';
-import {  PRODUCT_REPO_TOKEN,  IProductsRepository
+import { ProductInterface } from '../domain/product.interface';
+import {
+  PRODUCT_REPO_TOKEN,
+  IProductsRepository,
 } from '../infraestructure/repository/products.repository.interface';
 
 @Injectable()
