@@ -12,31 +12,17 @@ export class ProductsService {
     private readonly productsRepository: ProductsIRepository,
   ) {}
 
-  async createProductIfNotExists(
+  async createProductUnregistered(
     productInterface: ProductInterface,
   ): Promise<ProductInterface | string> {
     const { name } = productInterface;
     const productFound = await this.productsRepository.findProductByName(name);
     if (productFound) {
-      throw new ForbiddenException(`Product with name already exists.`);
+      throw new ForbiddenException('Product already exists.');
     }
     const newProduct =
       this.productsRepository.registerProduct(productInterface);
     return newProduct;
-  }
-
-  public async listProducts(): Promise<ProductInterface[]> {
-    return this.productsRepository.findAllProducts();
-  }
-
-  private async getProductByName(
-    name: string,
-  ): Promise<ProductInterface | null> {
-    const productFound = await this.productsRepository.findProductByName(name);
-    if (!productFound) {
-      throw new ForbiddenException(`Product with not found.`);
-    }
-    return productFound;
   }
 
   async getProductById(id: number): Promise<ProductInterface | string> {
@@ -46,4 +32,10 @@ export class ProductsService {
     }
     return productFound;
   }
+  
+  public async listProducts(): Promise<ProductInterface[]> {
+    return this.productsRepository.findAllProducts();
+  }
+
+  
 }
