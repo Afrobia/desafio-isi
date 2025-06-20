@@ -1,8 +1,8 @@
 import { ProductInterface } from 'src/products/model/product.interface';
 import { Product } from '../../model/product';
-import { ProductsIRepository } from './products.repository.interface';
+import { IProductsRepository } from './products.repository.interface';
 
-export class ProductsRepository implements ProductsIRepository {
+export class ProductsRepository implements IProductsRepository {
   private products: Product[] = [];
 
   private getAtributteProduct(
@@ -18,7 +18,7 @@ export class ProductsRepository implements ProductsIRepository {
 
   async registerProduct(
     productModel: ProductInterface,
-  ): Promise<ProductInterface> {
+  ): Promise<Product> {
     const { name, description, price, stock } =
       this.getAtributteProduct(productModel);
     const newProduct = new Product(name, description, price, stock);

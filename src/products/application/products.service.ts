@@ -1,15 +1,13 @@
 import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
 import { ProductInterface } from '../model/product.interface';
-import {
-  PRODUCT_REPO_TOKEN,
-  ProductsIRepository,
-} from '../infraestructure/db/products.repository.interface';
+import {  PRODUCT_REPO_TOKEN,  IProductsRepository
+} from '../infraestructure/repository/products.repository.interface';
 
 @Injectable()
 export class ProductsService {
   constructor(
     @Inject(PRODUCT_REPO_TOKEN)
-    private readonly productsRepository: ProductsIRepository,
+    private readonly productsRepository: IProductsRepository,
   ) {}
 
   async createProductUnregistered(
@@ -32,10 +30,8 @@ export class ProductsService {
     }
     return productFound;
   }
-  
+
   public async listProducts(): Promise<ProductInterface[]> {
     return this.productsRepository.findAllProducts();
   }
-
-  
 }

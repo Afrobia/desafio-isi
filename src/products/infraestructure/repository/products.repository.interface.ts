@@ -1,6 +1,6 @@
 import { ProductInterface } from '../../model/product.interface';
 
-export interface ProductsIRepository {
+export interface IProductsRepository {
   registerProduct(product: ProductInterface): Promise<ProductInterface>;
   findProductByName(name: string): Promise<ProductInterface | null>;
   findProductById(id: number): Promise<ProductInterface | null>;

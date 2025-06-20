@@ -13,4 +13,5 @@ import { ProductsRepository } from './products.repository';
   controllers: [],
   exports: [PRODUCT_REPO_TOKEN],
 })
+
 export class ProductRepositoryModule {}
