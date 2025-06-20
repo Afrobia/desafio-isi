@@ -2,12 +2,11 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ProductsService } from '../application/products.service';
 import { ProductInterface } from '../model/product.interface';
 import { Product } from '../model/product';
-import { PRODUCT_REPO_TOKEN, ProductsIRepository,
-} from '../infraestructure/repository/products.repository.interface';
+import { IProductsRepository, PRODUCT_REPO_TOKEN} from '../infraestructure/repository/products.repository.interface';
 
 describe('ProductsService', () => {
   let service: ProductsService;
-  let repository: ProductsIRepository;
+  let repository: IProductsRepository;
   let modelTest: ProductInterface = {
     name: 'Test Product',
     description: 'This is a test product',
@@ -33,7 +32,7 @@ describe('ProductsService', () => {
     }).compile();
 
     service = module.get<ProductsService>(ProductsService);
-    repository = module.get<ProductsIRepository>(PRODUCT_REPO_TOKEN);
+    repository = module.get<IProductsRepository>(PRODUCT_REPO_TOKEN);
   });
 
   it('should be defined', () => {
