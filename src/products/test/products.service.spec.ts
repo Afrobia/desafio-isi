@@ -28,7 +28,7 @@ describe('ProductsService', () => {
             registerProduct: jest.fn(),
             findProductByName: jest.fn(),
             findProductById: jest.fn(),
-            findAllProducts: jest.fn().mockResolvedValue([]),
+            getAllProducts: jest.fn().mockResolvedValue([]),
           },
         },
       ],
@@ -80,7 +80,7 @@ describe('ProductsService', () => {
 
   test('should list all products', async () => {
     const products = [new Product(name, description, price, stock)];
-    jest.spyOn(repository, 'findAllProducts').mockResolvedValue(products);
+    jest.spyOn(repository, 'getAllProducts').mockResolvedValue(products);
     const result = await service.listProducts();
     expect(result).toEqual(products);
   });

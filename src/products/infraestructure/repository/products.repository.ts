@@ -24,7 +24,7 @@ export class ProductsRepository implements IProductsRepository {
     return newProduct;
   }
 
-  async findAllProducts(): Promise<Product[]> {
+  async getAllProducts(): Promise<Product[]> {
     return this.products;
   }
 

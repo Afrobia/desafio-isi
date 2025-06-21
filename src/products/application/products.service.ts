@@ -34,6 +34,6 @@ export class ProductsService {
   }
 
   public async listProducts(): Promise<ProductInterface[]> {
-    return this.productsRepository.findAllProducts();
+    return this.productsRepository.getAllProducts();
   }
 }

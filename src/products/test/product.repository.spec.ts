@@ -43,4 +43,10 @@ describe('ProductsRepository', () => {
     const result = await repository.registerProduct(productTest);
     expect(result.getId()).toEqual(jestId.mock.results[0].value);
   });
+
+  test("shoul get all products and return an empty array", async () => {
+    const result = await repository.getAllProducts();
+    expect(result).toEqual([]);
+  });
+  
 });
