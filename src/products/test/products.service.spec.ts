@@ -5,7 +5,7 @@ import { Product } from '../domain/product';
 import {
   IProductsRepository,
   PRODUCT_REPO_TOKEN,
-} from '../infraestructure/repository/products.repository.interface';
+} from '../application/outboud-port/products.repository.interface';
 
 describe('ProductsService', () => {
   let service: ProductsService;

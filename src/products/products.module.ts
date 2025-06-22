@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { ProductsService } from './application/products.service';
 import { ProductsController } from './infraestructure/http/products.controller';
-import { ProductRepositoryModule } from './infraestructure/repository/products.repository.module';
-import { PRODUCT_SERVICE_TOKEN } from './application/products.service.interface';
+import { PRODUCT_SERVICE_TOKEN } from '../products/application/inbound-port/products.service.interface';
+import { RepositoryModule } from '../db/repository.persistence.module';
 
 
 @Module({
-  imports: [ProductRepositoryModule],
+  imports: [RepositoryModule],
   providers: [
     {
       provide: PRODUCT_SERVICE_TOKEN,
