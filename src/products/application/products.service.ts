@@ -38,4 +38,12 @@ export class ProductsService implements IProductsService {
     return this.productsRepository.getAllProducts();
   }
 
+  public async addProductToStock(product: ProductInterface): Promise<ProductInterface | string> {
+    const productUpdated = product
+    productUpdated.stock += product.stock;
+    productUpdated.updatedAt = new Date();
+    const updatedProduct = await this.productsRepository.updateProduct( productUpdated);
+    return updatedProduct;
+  }
+
 }

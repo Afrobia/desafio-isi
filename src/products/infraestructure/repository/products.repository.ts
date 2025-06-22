@@ -54,9 +54,10 @@ export class ProductsRepository implements IProductsRepository {
     return !productFound ? null : productFound;
   }
 
-  async updateStock(product: ProductInterface): Promise<ProductEntity | null> {
+  async updateProduct(product: ProductInterface): Promise<ProductEntity | null> {
     await this.productsRepository.update(product.id, product);
-    return this.findProductById(product.id);
+    const updatedProduct = await this.findProductById(product.id);
+    return updatedProduct ? updatedProduct : null;
   }
 
 

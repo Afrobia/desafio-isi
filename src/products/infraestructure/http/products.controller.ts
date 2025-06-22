@@ -1,8 +1,8 @@
 import { Body, Controller, Delete, Get, Inject, Param, Patch, Post } from '@nestjs/common';
-import { CreateProductDto } from './create-product.dto';
+import { CreateProductDto } from './dto/create-product.dto';
 import { ProductInterface } from '../../domain/product.interface';
 import { IProductsService, PRODUCT_SERVICE_TOKEN } from '../../application/products.service.interface';
-import { UpdateProductDto } from './update-product.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
 
 @Controller('products')
 export class ProductsController {
@@ -29,4 +29,14 @@ export class ProductsController {
   ): Promise<ProductInterface | string> {
     return this.productsService.getProductById(id);
   }
+  @Patch(':id')
+  async addProductStock(
+    @Param('id') id: number,
+    @Body() updateProductDto: UpdateProductDto,
+  ): Promise<ProductInterface | string> {
+    const productToUpdate = await this.productsService.getProductById(id) as ProductInterface;
+    return this.productsService.addProductToStock(productToUpdate);
+  }
+
+
 }
