@@ -29,8 +29,15 @@ export class CouponsRepository implements ICouponsRepository {
     const { code, type, value, one_shot} =
       this.getAttributesCoupon(coupon);
     const newCoupon = new CouponEntity(code, type, value, one_shot);
+    newCoupon.max_uses = this.couponIsOneShot(newCoupon).max_uses;
     await this.couponsRepository.save(newCoupon);
     return newCoupon;
+  }
+
+  private couponIsOneShot(coupon: CouponEntity): CouponEntity{
+    const { one_shot } = coupon;
+    one_shot? coupon.max_uses = 1 : coupon.max_uses = null;
+    return coupon;
   }
 
   private async couponMap(coupon: CouponEntity): Promise<ICoupon> {

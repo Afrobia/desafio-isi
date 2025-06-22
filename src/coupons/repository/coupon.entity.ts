@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryColumn } from 'typeorm';
 import { TypeCoupons } from '../coupon-enum';
 
-@Entity()
+@Entity('coupons')
 export class CouponEntity {
   @PrimaryColumn('bigint', { nullable: false, unique: true })
   id: number;
@@ -13,19 +13,19 @@ export class CouponEntity {
   value: number;
   @Column()
   one_shot: boolean;
-  @Column()
+  @Column({nullable: true})
   max_uses: number;
-  @Column()
+  @Column({default: 0})
   uses_count: number;
-  @Column()
+  @Column({nullable: true})
   valid_from: Date;
-  @Column()
+  @Column({nullable: true})
   valid_until: Date;
-  @Column()
+  @Column({nullable: true})
   createdAt: Date;
-  @Column()
+  @Column({nullable: true})
   updatedAt: Date;
-  @Column()
+  @Column({nullable: true})
   deletedAt: Date;
 
   constructor(
@@ -33,20 +33,16 @@ export class CouponEntity {
     type: TypeCoupons,
     value: number,
     one_shot: boolean,
-    max_uses: number,
-    uses_count: number,
-    valid_from: Date,
-    valid_until: Date,
   ) {
     this.id = Date.now();
     this.code = code;
     this.type = type;
     this.value = value;
     this.one_shot = one_shot;
-    this.max_uses = max_uses;
-    this.uses_count = uses_count;
-    this.valid_from = valid_from;
-    this.valid_until = valid_until;
+    this.max_uses = null;
+    this.uses_count = 0;
+    this.valid_from = null;
+    this.valid_until = null;
     this.createdAt = new Date();
     this.updatedAt = new Date();
     this.deletedAt = null;
