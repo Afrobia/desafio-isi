@@ -1,4 +1,4 @@
-import { ProductInterface } from '../domain/product.interface';
+import { ProductInterface } from  '../../domain/product.interface';
 
 export interface IProductsService {
   createProductUnregistered(productI: ProductInterface): Promise<ProductInterface | string>;

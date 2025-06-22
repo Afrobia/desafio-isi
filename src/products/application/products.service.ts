@@ -1,8 +1,10 @@
 import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
 import { ProductInterface } from '../domain/product.interface';
-import { PRODUCT_REPO_TOKEN,  IProductsRepository,
-  } from '../infraestructure/repository/products.repository.interface';
-import { IProductsService } from './products.service.interface';
+import {
+  PRODUCT_REPO_TOKEN,
+  IProductsRepository,
+} from './outboud-port/products.repository.interface';
+import { IProductsService } from './inbound-port/products.service.interface';
 
 @Injectable()
 export class ProductsService implements IProductsService {
@@ -10,9 +12,10 @@ export class ProductsService implements IProductsService {
     @Inject(PRODUCT_REPO_TOKEN)
     private readonly productsRepository: IProductsRepository,
   ) {}
-  
-   async createProductUnregistered(
-    product: ProductInterface): Promise<ProductInterface | string> {
+
+  async createProductUnregistered(
+    product: ProductInterface,
+  ): Promise<ProductInterface | string> {
     const { name } = product;
     await this.getProductByName(name);
     const newProduct = await this.productsRepository.registerProduct(product);
@@ -27,7 +30,9 @@ export class ProductsService implements IProductsService {
     return productFound;
   }
 
-  private async getProductByName(name: string): Promise<ProductInterface | string> {
+  private async getProductByName(
+    name: string,
+  ): Promise<ProductInterface | string> {
     const productFound = await this.productsRepository.findProductByName(name);
     if (productFound) {
       throw new ForbiddenException(`Product already exists.`);
@@ -39,27 +44,36 @@ export class ProductsService implements IProductsService {
     return this.productsRepository.getAllProducts();
   }
 
-  public async addProductToStock(id:number ,amout:number): Promise<ProductInterface | string> {
+  public async addProductToStock(
+    id: number,
+    amout: number,
+  ): Promise<ProductInterface | string> {
     const productForUpdate = await this.productsRepository.findProductById(id);
     productForUpdate.stock += amout;
     productForUpdate.updatedAt = new Date();
-    const updatedProduct = await this.productsRepository.updateProduct( productForUpdate);
+    const updatedProduct =
+      await this.productsRepository.updateProduct(productForUpdate);
     return updatedProduct;
   }
 
-  public async removeProductFromStock( id:number ,amout:number): Promise<ProductInterface | string> {
-    const productForUpdate = await this.getProductById(id) as ProductInterface;
+  public async removeProductFromStock(
+    id: number,
+    amout: number,
+  ): Promise<ProductInterface | string> {
+    const productForUpdate = (await this.getProductById(
+      id,
+    )) as ProductInterface;
     if (!this.stockIsAvailable(productForUpdate, amout)) {
       throw new ForbiddenException('Not enough stock available.');
     }
     productForUpdate.stock -= amout;
     productForUpdate.updatedAt = new Date();
-    const updatedProduct = await this.productsRepository.updateProduct( productForUpdate);
+    const updatedProduct =
+      await this.productsRepository.updateProduct(productForUpdate);
     return updatedProduct;
   }
 
   private stockIsAvailable(product: ProductInterface, amount: number): boolean {
-    return product.stock >= amount? true : false;
+    return product.stock >= amount ? true : false;
   }
-
 }

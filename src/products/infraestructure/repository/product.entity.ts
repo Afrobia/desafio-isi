@@ -2,7 +2,7 @@ import { Column, Entity, PrimaryColumn } from 'typeorm';
 import { ProductInterface } from '../../domain/product.interface';
 
 @Entity('products')
-export class ProductEntity implements ProductInterface {
+export class ProductEntity {
   @PrimaryColumn('bigint', { primary: true, unique: true, nullable: false })
   id: number;
   @Column('varchar', { length: 100 })

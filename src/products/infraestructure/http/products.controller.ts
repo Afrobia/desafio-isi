@@ -1,7 +1,11 @@
-import { Body, Controller, Get, Inject, Param, Patch, Post } from '@nestjs/common';
+import {Body, Controller, Get, Inject, Param, Patch, Post,
+  } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { ProductInterface } from '../../domain/product.interface';
-import { IProductsService, PRODUCT_SERVICE_TOKEN } from '../../application/products.service.interface';
+import {
+  IProductsService,
+  PRODUCT_SERVICE_TOKEN,
+} from '../../application/inbound-port/products.service.interface';
 import { UpdateProductDto } from './dto/update-product.dto';
 
 @Controller('products')
@@ -39,11 +43,13 @@ export class ProductsController {
   }
 
   @Patch(':id/remove-stock')
-  async removeProductStock( 
+  async removeProductStock(
     @Param('id') id: number,
     @Body() updateProductDto: UpdateProductDto,
   ): Promise<ProductInterface | string> {
-    return this.productsService.removeProductFromStock(id, updateProductDto.stock);
+    return this.productsService.removeProductFromStock(
+      id,
+      updateProductDto.stock,
+    );
   }
-
 }

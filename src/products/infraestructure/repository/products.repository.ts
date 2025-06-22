@@ -1,13 +1,16 @@
 import { ProductInterface } from '../../../products/domain/product.interface';
-import { ProductEntity } from '../../../products/infraestructure/repository/product.entity'
-import { IProductsRepository } from './products.repository.interface';
+import { ProductEntity } from '../../../products/infraestructure/repository/product.entity';
+import { IProductsRepository } from '../../application/outboud-port/products.repository.interface';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
 export class ProductsRepository implements IProductsRepository {
   private readonly products = new Map<string, ProductEntity>();
 
-  constructor(@InjectRepository(ProductEntity) private readonly productsRepository: Repository<ProductEntity>){}
+  constructor(
+    @InjectRepository(ProductEntity)
+    private readonly productsRepository: Repository<ProductEntity>,
+  ) {}
 
   private getAtributteProduct(
     productInterface: ProductInterface,
@@ -20,7 +23,9 @@ export class ProductsRepository implements IProductsRepository {
     };
   }
 
-  async registerProduct(productModel: ProductInterface): Promise<ProductEntity> {
+  async registerProduct(
+    productModel: ProductInterface,
+  ): Promise<ProductEntity> {
     const { name, description, price, stock } =
       this.getAtributteProduct(productModel);
     const newProduct = new ProductEntity(name, description, price, stock);
@@ -30,11 +35,13 @@ export class ProductsRepository implements IProductsRepository {
 
   async getAllProducts(): Promise<ProductEntity[]> {
     const products = await this.productsRepository.find();
-    const productEntities = Promise.all(products.map((product) => this.productMap(product)));
+    const productEntities = Promise.all(
+      products.map((product) => this.productMap(product)),
+    );
     return productEntities;
   }
 
-  private async productMap( product: ProductEntity): Promise<ProductEntity> {
+  private async productMap(product: ProductEntity): Promise<ProductEntity> {
     const { name, description, price, stock } = product;
     const newProduct = new ProductEntity(name, description, price, stock);
     newProduct.setId(product.getId());
@@ -45,25 +52,37 @@ export class ProductsRepository implements IProductsRepository {
   }
 
   async findProductById(productId: number): Promise<ProductEntity | null> {
-    const productFound = await this.productsRepository.findOne({ where: { id : productId } });
+    const productFound = await this.productsRepository.findOne({
+      where: { id: productId },
+    });
     return !productFound ? null : productFound;
   }
 
   async findProductByName(name: string): Promise<ProductEntity | null> {
-    const productFound =  await this.productsRepository.findOne({ where: { name } });
+    const productFound = await this.productsRepository.findOne({
+      where: { name },
+    });
     return !productFound ? null : productFound;
   }
 
-  async updateProduct(product: ProductInterface): Promise<ProductEntity | null> {
+  async updateProduct(
+    product: ProductInterface,
+  ): Promise<ProductEntity | null> {
     console.log('Updating product:', product);
-    const updatedProduct = await this.availableStockProduct(product as ProductEntity);
+    const updatedProduct = await this.availableStockProduct(
+      product as ProductEntity,
+    );
     return updatedProduct ? updatedProduct : null;
   }
 
-  async availableStockProduct(product: ProductEntity): Promise<ProductEntity | null> {
-    product.stock == 0 ? product.deletedAt = new Date() : product.deletedAt = null;
-    return await this.productsRepository.update(product.id, product)
+  async availableStockProduct(
+    product: ProductEntity,
+  ): Promise<ProductEntity | null> {
+    product.stock == 0
+      ? (product.deletedAt = new Date())
+      : (product.deletedAt = null);
+    return await this.productsRepository
+      .update(product.id, product)
       .then(() => this.findProductById(product.id));
   }
-
 }
