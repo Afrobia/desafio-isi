@@ -55,6 +55,7 @@ export class ProductsRepository implements IProductsRepository {
   }
 
   async updateProduct(product: ProductInterface): Promise<ProductEntity | null> {
+    console.log('Updating product:', product);
     await this.productsRepository.update(product.id, product);
     const updatedProduct = await this.findProductById(product.id);
     return updatedProduct ? updatedProduct : null;

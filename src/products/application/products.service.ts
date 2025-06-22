@@ -38,12 +38,22 @@ export class ProductsService implements IProductsService {
     return this.productsRepository.getAllProducts();
   }
 
-  public async addProductToStock(product: ProductInterface): Promise<ProductInterface | string> {
-    const productUpdated = product
-    productUpdated.stock += product.stock;
-    productUpdated.updatedAt = new Date();
-    const updatedProduct = await this.productsRepository.updateProduct( productUpdated);
+  public async addProductToStock(id:number ,amout:number): Promise<ProductInterface | string> {
+    const productForUpdate = await this.productsRepository.findProductById(id);
+    productForUpdate.stock += amout;
+    productForUpdate.updatedAt = new Date();
+    const updatedProduct = await this.productsRepository.updateProduct( productForUpdate);
     return updatedProduct;
   }
+
+  public async removeProductFromStock( id:number ,amout:number): Promise<ProductInterface | string> {
+    const productForUpdate = await this.getProductById(id) as ProductInterface;
+    productForUpdate.stock -= amout;
+    productForUpdate.updatedAt = new Date();
+    const updatedProduct = await this.productsRepository.updateProduct( productForUpdate);
+    return updatedProduct;
+  }
+
+
 
 }
