@@ -5,6 +5,7 @@ import {
   IProductsRepository,
 } from '../infraestructure/repository/products.repository.interface';
 import { IProductsService } from './products.service.interface';
+import { publicDecrypt } from 'crypto';
 
 @Injectable()
 export class ProductsService implements IProductsService {
@@ -48,12 +49,17 @@ export class ProductsService implements IProductsService {
 
   public async removeProductFromStock( id:number ,amout:number): Promise<ProductInterface | string> {
     const productForUpdate = await this.getProductById(id) as ProductInterface;
+    if (!this.stockIsAvailable(productForUpdate, amout)) {
+      throw new ForbiddenException('Not enough stock available.');
+    }
     productForUpdate.stock -= amout;
     productForUpdate.updatedAt = new Date();
     const updatedProduct = await this.productsRepository.updateProduct( productForUpdate);
     return updatedProduct;
   }
 
-
+  private stockIsAvailable(product: ProductInterface, amount: number): boolean {
+    return product.stock >= amount? true : false;
+  }
 
 }
