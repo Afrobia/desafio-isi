@@ -1,0 +1,41 @@
+import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { ProductInterface } from '../../domain/product.interface';
+
+@Entity('products')
+export class ProductEntity implements ProductInterface {
+  @PrimaryColumn('bigint', { primary: true, unique: true, nullable: false })
+  id: number;
+  @Column('varchar', { length: 100 })
+  name: string;
+  @Column('varchar', { length: 200 })
+  description: string;
+  @Column('decimal', { precision: 10, scale: 2 })
+  price: number;
+  @Column('int')
+  stock: number;
+  @Column('timestamp', { default: () => 'CURRENT_TIMESTAMP' })
+  createdAt: Date;
+  @Column('timestamp', { default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
+  updatedAt: Date;
+  @Column('timestamp', { nullable: true, default: null })
+  deletedAt: Date | null;
+
+  constructor(name: string, description: string, price: number, stock: number) {
+    this.id = Date.now();
+    this.name = name;
+    this.description = description;
+    this.price = price;
+    this.stock = stock;
+    this.createdAt = new Date();
+    this.updatedAt = new Date();
+    this.deletedAt = null;
+  }
+
+  getId(): number {
+    return this.id;
+  }
+
+  setId(id: number): void {
+    this.id = id;
+  }
+}

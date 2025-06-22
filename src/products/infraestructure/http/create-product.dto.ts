@@ -1,4 +1,4 @@
-import { IsDecimal, IsNotEmpty, IsNumber, IsString, Length, MaxLength, MinLength } from "class-validator";
+import { IsNotEmpty, IsNumber, IsString, Length, MaxLength} from "class-validator";
 
 export class CreateProductDto {
   @IsString()

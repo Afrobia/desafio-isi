@@ -59,18 +59,5 @@ export class ProductsRepository implements IProductsRepository {
     return this.findProductById(product.id);
   }
 
-  private async updateDeletedAt(product:ProductEntity): Promise<ProductEntity> {
-    product.stock === 0 ? product.deletedAt = new Date() : product.deletedAt = null;
-    return product;
-  }
-
-  async deleteProduct(id: number): Promise<void> {
-    const productFound = await this.findProductById(id);
-    if (!productFound) {
-      throw new Error(`Product not found.`);
-    }
-    productFound.deletedAt = new Date();
-    await this.productsRepository.save(productFound);
-  }
 
 }

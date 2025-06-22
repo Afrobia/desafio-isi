@@ -1,8 +1,7 @@
-import { ProductInterface } from "./product.interface";
+import { ProductInterface } from '../domain/product.interface';
 
 export class Product implements ProductInterface {
-
-  private id: number;
+  id: number;
   name: string;
   description: string;
   price: number;

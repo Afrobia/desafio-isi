@@ -1,9 +1,7 @@
 import { ProductInterface } from '../domain/product.interface';
 
 export interface IProductsService {
-  createProductUnregistered(
-    productI: ProductInterface,
-  ): Promise<ProductInterface | string>;
+  createProductUnregistered(productI: ProductInterface): Promise<ProductInterface | string>;
   getProductById(id: number): Promise<ProductInterface | string>;
   listProducts(): Promise<ProductInterface[]>;
 }

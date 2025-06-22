@@ -4,15 +4,16 @@ import {
   PRODUCT_REPO_TOKEN,
   IProductsRepository,
 } from '../infraestructure/repository/products.repository.interface';
+import { IProductsService } from './products.service.interface';
 
 @Injectable()
-export class ProductsService {
+export class ProductsService implements IProductsService {
   constructor(
     @Inject(PRODUCT_REPO_TOKEN)
     private readonly productsRepository: IProductsRepository,
   ) {}
-
-  async createProductUnregistered(
+  
+   async createProductUnregistered(
     productInterface: ProductInterface,
   ): Promise<ProductInterface | string> {
     const { name } = productInterface;
@@ -36,4 +37,5 @@ export class ProductsService {
   public async listProducts(): Promise<ProductInterface[]> {
     return this.productsRepository.getAllProducts();
   }
+
 }
