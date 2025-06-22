@@ -1,4 +1,4 @@
-import { ICoupon } from "./coupon.interface";
+import { ICoupon } from '../coupon.interface';
 
 export interface ICouponService {
   createCoupon(coupon: ICoupon): Promise<ICoupon | string>;
@@ -9,4 +9,4 @@ export interface ICouponService {
   applyCoupon(code: string, orderTotal: number): Promise<number | string>;
   removeCoupon(id: number): Promise<string>;
 }
-export const COUPON_SERVICE_TOKEN = Symbol();
+export const COUPONS_SERVICE_TOKEN = Symbol();
