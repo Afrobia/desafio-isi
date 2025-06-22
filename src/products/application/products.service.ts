@@ -1,11 +1,8 @@
 import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
 import { ProductInterface } from '../domain/product.interface';
-import {
-  PRODUCT_REPO_TOKEN,
-  IProductsRepository,
-} from '../infraestructure/repository/products.repository.interface';
+import { PRODUCT_REPO_TOKEN,  IProductsRepository,
+  } from '../infraestructure/repository/products.repository.interface';
 import { IProductsService } from './products.service.interface';
-import { publicDecrypt } from 'crypto';
 
 @Injectable()
 export class ProductsService implements IProductsService {
@@ -15,15 +12,10 @@ export class ProductsService implements IProductsService {
   ) {}
   
    async createProductUnregistered(
-    productInterface: ProductInterface,
-  ): Promise<ProductInterface | string> {
-    const { name } = productInterface;
-    const productFound = await this.productsRepository.findProductByName(name);
-    if (productFound) {
-      throw new ForbiddenException('Product already exists.');
-    }
-    const newProduct =
-      this.productsRepository.registerProduct(productInterface);
+    product: ProductInterface): Promise<ProductInterface | string> {
+    const { name } = product;
+    await this.getProductByName(name);
+    const newProduct = await this.productsRepository.registerProduct(product);
     return newProduct;
   }
 
@@ -31,6 +23,14 @@ export class ProductsService implements IProductsService {
     const productFound = await this.productsRepository.findProductById(id);
     if (!productFound) {
       throw new ForbiddenException(`Product not found.`);
+    }
+    return productFound;
+  }
+
+  private async getProductByName(name: string): Promise<ProductInterface | string> {
+    const productFound = await this.productsRepository.findProductByName(name);
+    if (productFound) {
+      throw new ForbiddenException(`Product already exists.`);
     }
     return productFound;
   }
