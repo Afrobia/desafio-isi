@@ -1,19 +1,47 @@
-import { ICoupon } from '../coupon.interface';
+import { ForbiddenException, Inject } from '@nestjs/common';
+import { COUPONS_REPO_TOKEN, ICouponsRepository } from './coupon.repository.interface';
 import { ICouponService } from './coupon.service.interface';
+import { ICoupon } from '../coupon.interface';
 
 export class CouponsService implements ICouponService {
-  createCoupon(coupon: ICoupon): Promise<ICoupon | string> {
-    throw new Error('Method not implemented.');
+
+  constructor(@Inject(COUPONS_REPO_TOKEN) private readonly couponsRepository: ICouponsRepository) {}
+
+  async createCoupon(coupon: ICoupon): Promise<ICoupon | string> {
+    const { code } = coupon;
+    await this.validateCouponByCode(code);
+    const newCoupon = this.couponsRepository.registerCoupon(coupon);
+    return newCoupon;
   }
-  getCouponById(id: number): Promise<ICoupon | string> {
-    throw new Error('Method not implemented.');
+
+  async getCouponById(id: number): Promise<ICoupon | string> {
+    const couponFound = await this.couponsRepository.findCouponById(id);
+    if (!couponFound) {
+      throw new Error(`Coupon not found.`);
+    }
+    return couponFound;
   }
-  getCouponByCode(code: string): Promise<ICoupon | string> {
-    throw new Error('Method not implemented.');
+
+  private async validateCouponByCode(code: string): Promise<ICoupon | string> {
+    const couponFound = await this.couponsRepository.findCouponByCode(code);
+    if (couponFound) {
+      throw new ForbiddenException(`Coupon already exists.`);
+    }
+    return null;
   }
+
+  async getCouponByCode(code: string): Promise<ICoupon | string> {
+    const couponFound = await this.couponsRepository.findCouponByCode(code);
+    if (!couponFound) {
+      throw new ForbiddenException(`Coupon not found.`);
+    }
+    return couponFound;
+  }
+
   listCoupons(): Promise<ICoupon[]> {
-    throw new Error('Method not implemented.');
+    return this.couponsRepository.getAllCoupons();
   }
+  
   updateCoupon(coupon: ICoupon): Promise<ICoupon | string> {
     throw new Error('Method not implemented.');
   }

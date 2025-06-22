@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { RepositoryModule } from '../db/repository.persistence.module';
 import { COUPONS_SERVICE_TOKEN } from './application/coupon.service.interface';
 import { CouponsService } from './application/coupons.service';
+import { CouponsController } from './http/coupons.controller';
 
 @Module({
   imports: [RepositoryModule],
@@ -11,7 +12,7 @@ import { CouponsService } from './application/coupons.service';
       useClass: CouponsService,
     },
   ],
-  controllers: [],
+  controllers: [CouponsController],
   exports: [COUPONS_SERVICE_TOKEN],
 })
 export class CouponsModule {}
