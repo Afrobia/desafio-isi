@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProductsRepository } from '../infraestructure/repository/products.repository';
-import { ProductInterface } from '../model/product.interface';
-import { Product } from '../model/product';
+import { ProductInterface } from '../domain/product.interface';
+import { Product } from '../domain/product';
 
 Date.now = jest.fn(() => new Date(Date.UTC(2017, 1, 14)).valueOf());
 const jestId = jest.spyOn(Product.prototype, 'getId').mockImplementation(() => {
@@ -43,4 +43,10 @@ describe('ProductsRepository', () => {
     const result = await repository.registerProduct(productTest);
     expect(result.getId()).toEqual(jestId.mock.results[0].value);
   });
+
+  test("shoul get all products and return an empty array", async () => {
+    const result = await repository.getAllProducts();
+    expect(result).toEqual([]);
+  });
+  
 });

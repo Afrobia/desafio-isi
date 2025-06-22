@@ -1,5 +1,5 @@
-import { ProductInterface } from 'src/products/model/product.interface';
-import { Product } from '../../model/product';
+import { ProductInterface } from 'src/products/domain/product.interface';
+import { Product } from '../../domain/product';
 import { IProductsRepository } from './products.repository.interface';
 
 export class ProductsRepository implements IProductsRepository {
@@ -16,9 +16,7 @@ export class ProductsRepository implements IProductsRepository {
     };
   }
 
-  async registerProduct(
-    productModel: ProductInterface,
-  ): Promise<Product> {
+  async registerProduct(productModel: ProductInterface): Promise<Product> {
     const { name, description, price, stock } =
       this.getAtributteProduct(productModel);
     const newProduct = new Product(name, description, price, stock);
@@ -26,7 +24,7 @@ export class ProductsRepository implements IProductsRepository {
     return newProduct;
   }
 
-  async findAllProducts(): Promise<Product[]> {
+  async getAllProducts(): Promise<Product[]> {
     return this.products;
   }
 

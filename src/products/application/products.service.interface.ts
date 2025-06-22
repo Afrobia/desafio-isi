@@ -1,9 +1,11 @@
-import { ProductInterface } from "../model/product.interface";
+import { ProductInterface } from '../domain/product.interface';
 
 export interface IProductsService {
-  createProductUnregistered(productI: ProductInterface): Promise<ProductInterface | string>;
+  createProductUnregistered(
+    productI: ProductInterface,
+  ): Promise<ProductInterface | string>;
   getProductById(id: number): Promise<ProductInterface | string>;
   listProducts(): Promise<ProductInterface[]>;
 }
 
-export const PRODUCT_SERVICE_TOKEN = Symbol()
+export const PRODUCT_SERVICE_TOKEN = Symbol();
