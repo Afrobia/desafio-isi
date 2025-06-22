@@ -1,5 +1,4 @@
 import { Column, Entity, PrimaryColumn } from 'typeorm';
-import { ProductInterface } from '../../domain/product.interface';
 
 @Entity('products')
 export class ProductEntity {
