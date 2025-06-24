@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Inject, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Inject, Param, Patch, Post } from '@nestjs/common';
 import {
   COUPONS_SERVICE_TOKEN,
   ICouponService,
@@ -22,7 +22,7 @@ export class CouponsController {
   }
 
   @Get(':code')
-  async getCouponByCode(@Body('code') code: string): Promise<ICoupon | string> {
+  async getCouponByCode(@Param('code') code: string): Promise<ICoupon | string> {
     return await this.couponsService.getCouponByCode(code);
   }
 
@@ -38,6 +38,11 @@ export class CouponsController {
   ): Promise<ICoupon | string> {
     
     return await this.couponsService.updateCoupon(code,coupon);
+  }
+
+  @Delete(':code')
+  async deleteCoupon(@Param('code') code: string): Promise<string> {
+    return await this.couponsService.removeCoupon(code);
   }
 
 }

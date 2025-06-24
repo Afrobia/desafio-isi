@@ -56,7 +56,7 @@ export class CouponsService implements ICouponService {
     return await this.couponsRepository.getAllCoupons();
   }
 
-  private async getCouponByCodeAndValidate(
+  /* private async getCouponByCodeAndValidate(
     code: string,
   ): Promise<ICoupon | string> {
     const couponFound = (await this.getCouponByCode(code)) as ICoupon;
@@ -64,7 +64,7 @@ export class CouponsService implements ICouponService {
       throw new ForbiddenException(`Coupon has reached its maximum uses.`);
     }
     return couponFound;
-  }
+  } */
 
   async updateCoupon(code: string, coupon: ICoupon): Promise<ICoupon | string> {
     const { max_uses, valid_until } = coupon
@@ -79,10 +79,11 @@ export class CouponsService implements ICouponService {
     return updatedCoupon;
   }
 
-  applyCoupon(code: string): Promise<number | string> {
-    throw new Error('Method not implemented.');
-  }
-  removeCoupon(id: number): Promise<string> {
-    throw new Error('Method not implemented.');
+  async removeCoupon(code: string): Promise<string> {
+    const couponFound = await this.getCouponByCode(code) as ICoupon;
+    console.log(couponFound);
+    const couponDeleted = await this.couponsRepository.deleteCoupon(couponFound);
+    console.log(couponDeleted);
+    return `Coupon ${couponDeleted.code} deleted successfully.`;
   }
 }

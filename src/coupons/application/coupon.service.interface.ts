@@ -6,7 +6,6 @@ export interface ICouponService {
   getCouponByCode(code: string): Promise<ICoupon | string>;
   listCoupons(): Promise<ICoupon[]>;
   updateCoupon(code:string, coupon: ICoupon): Promise<ICoupon | string>;
-  applyCoupon(code: string, orderTotal: number): Promise<number | string>;
-  removeCoupon(id: number): Promise<string>;
+  removeCoupon(code:string): Promise<string>;
 }
 export const COUPONS_SERVICE_TOKEN = Symbol();

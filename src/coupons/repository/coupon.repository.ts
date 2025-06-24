@@ -11,6 +11,9 @@ export class CouponsRepository implements ICouponsRepository{
     @InjectRepository(CouponEntity)
     private readonly couponsRepository: Repository<CouponEntity>,
   ) {}
+  restoureCoupon(code: string): Promise<ICoupon | null> {
+    throw new Error('Method not implemented.');
+  }
 
   private getAttributesCoupon(coupon: ICoupon): ICoupon {
     return {
@@ -61,10 +64,8 @@ export class CouponsRepository implements ICouponsRepository{
     return newCoupon;
   }
 
-  async findCouponByCode(code: string): Promise<ICoupon | null> {
-    const couponFound = await this.couponsRepository.findOne({
-      where: { code },
-    });
+  async findCouponByCode(couponCode: string): Promise<ICoupon | null> {
+    const couponFound = await this.couponsRepository.findOneBy({ code : couponCode});
     return !couponFound ? null : couponFound;
   }
 
@@ -84,8 +85,9 @@ export class CouponsRepository implements ICouponsRepository{
   }
   
   private updateDeletedAt(coupon: CouponEntity): CouponEntity {
-    const { uses_count, max_uses } = coupon;
+    const { uses_count, max_uses} = coupon;
     uses_count == max_uses? coupon.deletedAt = new Date() : coupon.deletedAt = null;
+
     return coupon;
   }
 
@@ -103,4 +105,9 @@ export class CouponsRepository implements ICouponsRepository{
     return updatedCoupon.affected > 0 ? coupon : null;
   }
 
+  async deleteCoupon(coupon: CouponEntity): Promise<CouponEntity | null> {
+    const deletedCoupon = await this.couponsRepository.softDelete({
+      code: coupon.code})
+    return deletedCoupon.affected > 0 ? coupon : null;
+  }
 }
