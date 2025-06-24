@@ -1,15 +1,29 @@
 import { ForbiddenException, Inject } from '@nestjs/common';
-import { COUPONS_REPO_TOKEN, ICouponsRepository } from './coupon.repository.interface';
+import {
+  COUPONS_REPO_TOKEN,
+  ICouponsRepository,
+} from './coupon.repository.interface';
 import { ICouponService } from './coupon.service.interface';
-import { ICoupon } from '../coupon.interface';
+import { ICoupon } from '../domain/coupon.interface';
+import {
+  COUPONS_VALID_TOKEN,
+  CouponValidate,
+} from './validation/coupons-validation';
 
 export class CouponsService implements ICouponService {
-
-  constructor(@Inject(COUPONS_REPO_TOKEN) private readonly couponsRepository: ICouponsRepository) {}
+  constructor(
+    @Inject(COUPONS_REPO_TOKEN)
+    private readonly couponsRepository: ICouponsRepository,
+    @Inject(COUPONS_VALID_TOKEN)
+    private readonly couponValidate: CouponValidate,
+  ) {}
 
   async createCoupon(coupon: ICoupon): Promise<ICoupon | string> {
     const { code } = coupon;
+    coupon.code = this.couponValidate.lowCaseCode(code);
     await this.validateCouponByCode(code);
+    this.couponValidate.valueIsValid(coupon);
+    coupon = this.couponValidate.ifOneShot(coupon);
     const newCoupon = this.couponsRepository.registerCoupon(coupon);
     return newCoupon;
   }
@@ -22,7 +36,7 @@ export class CouponsService implements ICouponService {
     return couponFound;
   }
 
-  private async validateCouponByCode(code: string): Promise<ICoupon | string> {
+  async validateCouponByCode(code: string): Promise<ICoupon | string> {
     const couponFound = await this.couponsRepository.findCouponByCode(code);
     if (couponFound) {
       throw new ForbiddenException(`Coupon already exists.`);
@@ -38,14 +52,34 @@ export class CouponsService implements ICouponService {
     return couponFound;
   }
 
-  listCoupons(): Promise<ICoupon[]> {
-    return this.couponsRepository.getAllCoupons();
+  async listCoupons(): Promise<ICoupon[]> {
+    return await this.couponsRepository.getAllCoupons();
   }
-  
-  updateCoupon(coupon: ICoupon): Promise<ICoupon | string> {
-    throw new Error('Method not implemented.');
+
+  private async getCouponByCodeAndValidate(
+    code: string,
+  ): Promise<ICoupon | string> {
+    const couponFound = (await this.getCouponByCode(code)) as ICoupon;
+    if (couponFound.uses_count >= couponFound.max_uses) {
+      throw new ForbiddenException(`Coupon has reached its maximum uses.`);
+    }
+    return couponFound;
   }
-  applyCoupon(code: string, orderTotal: number): Promise<number | string> {
+
+  async updateCoupon(code: string, coupon: ICoupon): Promise<ICoupon | string> {
+    const { max_uses, valid_from, valid_until } = coupon;
+    const couponFound = (await this.getCouponByCode(code)) as ICoupon;
+    couponFound.max_uses = max_uses;
+    this.couponValidate.valueIsValid(couponFound);
+    couponFound.valid_from = valid_from;
+    couponFound.valid_until = valid_until;
+    const updatedCoupon =
+      await this.couponsRepository.updateCoupon(couponFound);
+
+    return updatedCoupon;
+  }
+
+  applyCoupon(code: string): Promise<number | string> {
     throw new Error('Method not implemented.');
   }
   removeCoupon(id: number): Promise<string> {
