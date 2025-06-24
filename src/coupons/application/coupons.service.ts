@@ -2,8 +2,8 @@ import { ForbiddenException, Inject } from '@nestjs/common';
 import {
   COUPONS_REPO_TOKEN,
   ICouponsRepository,
-} from './coupon.repository.interface';
-import { ICouponService } from './coupon.service.interface';
+} from '../application/outbound-port/coupon.repository.interface';
+import { ICouponService } from './inbound-port/coupon.service.interface';
 import { ICoupon } from '../domain/coupon.interface';
 import {
   COUPONS_VALID_TOKEN,
@@ -67,22 +67,23 @@ export class CouponsService implements ICouponService {
   } */
 
   async updateCoupon(code: string, coupon: ICoupon): Promise<ICoupon | string> {
-    const { max_uses, valid_until } = coupon
-    let couponFound = await this.getCouponByCode(code) as ICoupon;
-  
+    const { max_uses, valid_until } = coupon;
+    let couponFound = (await this.getCouponByCode(code)) as ICoupon;
+
     couponFound.max_uses = max_uses;
     this.couponValidate.max_usesIsValid(couponFound);
     couponFound.valid_until = valid_until;
-    
+
     const updatedCoupon =
-      await this.couponsRepository.updateCoupon(couponFound)
+      await this.couponsRepository.updateCoupon(couponFound);
     return updatedCoupon;
   }
 
   async removeCoupon(code: string): Promise<string> {
-    const couponFound = await this.getCouponByCode(code) as ICoupon;
+    const couponFound = (await this.getCouponByCode(code)) as ICoupon;
     console.log(couponFound);
-    const couponDeleted = await this.couponsRepository.deleteCoupon(couponFound);
+    const couponDeleted =
+      await this.couponsRepository.deleteCoupon(couponFound);
     console.log(couponDeleted);
     return `Coupon ${couponDeleted.code} deleted successfully.`;
   }

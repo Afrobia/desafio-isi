@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { RepositoryModule } from '../db/repository.persistence.module';
-import { COUPONS_SERVICE_TOKEN } from './application/coupon.service.interface';
+import { COUPONS_SERVICE_TOKEN } from './application/inbound-port/coupon.service.interface';
 import { CouponsService } from './application/coupons.service';
-import { CouponsController } from './http/coupons.controller';
+import { CouponsController } from './infraestructure/http/coupons.controller';
 import {
   COUPONS_VALID_TOKEN,
   CouponValidate,

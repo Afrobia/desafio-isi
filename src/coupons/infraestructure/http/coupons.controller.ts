@@ -1,11 +1,20 @@
-import { Body, Controller, Delete, Get, Inject, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Inject,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import {
   COUPONS_SERVICE_TOKEN,
   ICouponService,
-} from '../application/coupon.service.interface';
+} from '../../application/inbound-port/coupon.service.interface';
 import { CreateCouponsDto } from './create-coupons.dto';
-import { ICoupon } from '../domain/coupon.interface';
-import { UpdateCouponsDto } from './update-coupons.dto';
+import { ICoupon } from '../../domain/coupon.interface';
+import { UpdateCouponsDto } from './dto/update-coupons.dto';
 
 @Controller('coupons')
 export class CouponsController {
@@ -22,7 +31,9 @@ export class CouponsController {
   }
 
   @Get(':code')
-  async getCouponByCode(@Param('code') code: string): Promise<ICoupon | string> {
+  async getCouponByCode(
+    @Param('code') code: string,
+  ): Promise<ICoupon | string> {
     return await this.couponsService.getCouponByCode(code);
   }
 
@@ -36,13 +47,11 @@ export class CouponsController {
     @Param('code') code: string,
     @Body() coupon: UpdateCouponsDto,
   ): Promise<ICoupon | string> {
-    
-    return await this.couponsService.updateCoupon(code,coupon);
+    return await this.couponsService.updateCoupon(code, coupon);
   }
 
   @Delete(':code')
   async deleteCoupon(@Param('code') code: string): Promise<string> {
     return await this.couponsService.removeCoupon(code);
   }
-
 }
