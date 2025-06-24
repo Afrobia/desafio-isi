@@ -9,6 +9,6 @@ export class UpdateCouponsDto {
 
   @Type(() => Date)
   @IsDate()
-  deletedAt: Date;
+  valid_until: Date;
 
 }

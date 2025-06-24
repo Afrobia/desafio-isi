@@ -67,15 +67,15 @@ export class CouponsService implements ICouponService {
   }
 
   async updateCoupon(code: string, coupon: ICoupon): Promise<ICoupon | string> {
-    const { max_uses, valid_from, valid_until } = coupon;
-    const couponFound = (await this.getCouponByCode(code)) as ICoupon;
+    const { max_uses, valid_until } = coupon
+    let couponFound = await this.getCouponByCode(code) as ICoupon;
+  
     couponFound.max_uses = max_uses;
-    this.couponValidate.valueIsValid(couponFound);
-    couponFound.valid_from = valid_from;
+    this.couponValidate.max_usesIsValid(couponFound);
     couponFound.valid_until = valid_until;
+    
     const updatedCoupon =
-      await this.couponsRepository.updateCoupon(couponFound);
-
+      await this.couponsRepository.updateCoupon(couponFound)
     return updatedCoupon;
   }
 

@@ -89,11 +89,18 @@ export class CouponsRepository implements ICouponsRepository{
     return coupon;
   }
 
-  async updateCoupon(coupon: ICoupon): Promise<ICoupon> {
-    const couponUpdated = await this.couponsRepository.update(
-      { code: coupon.code },coupon).then(() => this.findCouponByCode(coupon.code));
-    
-      return this.updateDeletedAt(couponUpdated as CouponEntity);
+
+  async updateCoupon(coupon: CouponEntity): Promise<ICoupon | null> {
+    const updatedCoupon = await this.couponsRepository.update(
+      { code: coupon.code }, 
+      {
+        max_uses: coupon.max_uses,
+        valid_until: coupon.valid_until,
+        updatedAt: new Date(),
+        deletedAt: this.updateDeletedAt(coupon).deletedAt,
+      },)
+      
+    return updatedCoupon.affected > 0 ? coupon : null;
   }
 
 }
