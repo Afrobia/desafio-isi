@@ -1,10 +1,10 @@
 import { ICouponsRepository } from '../application/coupon.repository.interface';
 import { CouponEntity } from './coupon.entity';
 import { Repository } from 'typeorm';
-import { ICoupon } from '../coupon.interface';
+import { ICoupon } from '../domain/coupon.interface';
 import { InjectRepository } from '@nestjs/typeorm';
 
-export class CouponsRepository implements ICouponsRepository {
+export class CouponsRepository implements ICouponsRepository{
   private readonly coupons = new Map<string, CouponEntity>();
 
   constructor(
@@ -19,38 +19,41 @@ export class CouponsRepository implements ICouponsRepository {
       value: coupon.value,
       one_shot: coupon.one_shot,
       max_uses: coupon.max_uses,
-      uses_count: coupon.uses_count,
       valid_from: coupon.valid_from,
-      valid_until: coupon.valid_until
+      valid_until: coupon.valid_until,
     };
   }
 
   async registerCoupon(coupon: ICoupon): Promise<ICoupon | null> {
-    const { code, type, value, one_shot} =
-      this.getAttributesCoupon(coupon);
-    const newCoupon = new CouponEntity(code, type, value, one_shot);
+    const { code, type, value, one_shot,valid_until } = this.getAttributesCoupon(coupon);
+    const newCoupon = new CouponEntity(code, type, value, one_shot, valid_until);
     newCoupon.max_uses = this.couponIsOneShot(newCoupon).max_uses;
     await this.couponsRepository.save(newCoupon);
     return newCoupon;
   }
 
-  private couponIsOneShot(coupon: CouponEntity): CouponEntity{
+  private couponIsOneShot(coupon: CouponEntity): CouponEntity {
     const { one_shot } = coupon;
-    one_shot? coupon.max_uses = 1 : coupon.max_uses = null;
+    one_shot ? (coupon.max_uses = 1) : (coupon.max_uses = null);
     return coupon;
   }
 
   private async couponMap(coupon: CouponEntity): Promise<ICoupon> {
-    const { id, code, type, value, one_shot, max_uses, uses_count, valid_from, valid_until } = coupon;
-    const newCoupon = new CouponEntity(
+    const {
+      id,
       code,
       type,
       value,
-      one_shot,);
+      one_shot,
+      max_uses,
+      uses_count,
+      valid_until,
+    } = coupon;
+    const newCoupon = new CouponEntity(code, type, value, one_shot, valid_until);
     newCoupon.id = id;
     newCoupon.max_uses = max_uses;
     newCoupon.uses_count = uses_count;
-    newCoupon.valid_from = valid_from;
+    newCoupon.valid_from = coupon.valid_from;
     newCoupon.valid_until = valid_until;
     newCoupon.createdAt = coupon.createdAt;
     newCoupon.updatedAt = coupon.updatedAt;
@@ -59,7 +62,9 @@ export class CouponsRepository implements ICouponsRepository {
   }
 
   async findCouponByCode(code: string): Promise<ICoupon | null> {
-    const couponFound = await this.couponsRepository.findOne({ where: { code },})
+    const couponFound = await this.couponsRepository.findOne({
+      where: { code },
+    });
     return !couponFound ? null : couponFound;
   }
 
@@ -77,8 +82,18 @@ export class CouponsRepository implements ICouponsRepository {
     );
     return couponEntities;
   }
+  
+  private updateDeletedAt(coupon: CouponEntity): CouponEntity {
+    const { uses_count, max_uses } = coupon;
+    uses_count == max_uses? coupon.deletedAt = new Date() : coupon.deletedAt = null;
+    return coupon;
+  }
 
   async updateCoupon(coupon: ICoupon): Promise<ICoupon> {
-    throw new Error('Method not implemented.');
+    const couponUpdated = await this.couponsRepository.update(
+      { code: coupon.code },coupon).then(() => this.findCouponByCode(coupon.code));
+    
+      return this.updateDeletedAt(couponUpdated as CouponEntity);
   }
+
 }
