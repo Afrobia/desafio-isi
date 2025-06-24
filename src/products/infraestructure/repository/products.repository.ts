@@ -4,10 +4,7 @@ import { IProductsRepository } from '../../application/outboud-port/products.rep
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
-export class ProductsRepository implements IProductsRepository {
-  private readonly products = new Map<string, ProductEntity>();
-
-  constructor(
+export class ProductsRepository implements IProductsRepository { constructor(
     @InjectRepository(ProductEntity)
     private readonly productsRepository: Repository<ProductEntity>,
   ) {}
