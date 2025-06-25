@@ -12,9 +12,9 @@ import {
   COUPONS_SERVICE_TOKEN,
   ICouponService,
 } from '../../application/inbound-port/coupon.service.interface';
-import { CreateCouponsDto } from './create-coupons.dto';
 import { ICoupon } from '../../domain/coupon.interface';
 import { UpdateCouponsDto } from './dto/update-coupons.dto';
+import { CreateCouponsDto } from './dto/create-coupons.dto';
 
 @Controller('coupons')
 export class CouponsController {

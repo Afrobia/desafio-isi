@@ -82,4 +82,9 @@ export class ProductsRepository implements IProductsRepository { constructor(
       .update(product.id, product)
       .then(() => this.findProductById(product.id));
   }
+
+  async deleteProduct(product: ProductInterface): Promise<void> {
+    const productDeleted = await this.productsRepository.softDelete(product.id);
+  }
+  
 }

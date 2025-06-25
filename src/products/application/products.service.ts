@@ -78,6 +78,14 @@ export class ProductsService implements IProductsService {
     return updatedProduct;
   }
 
+  async deleteProduct(id: number): Promise<string> {
+    const productForDelete = await this.getProductById(id) as ProductInterface;
+    await this.productsRepository.deleteProduct(productForDelete)
+    const productDeleted = await this.productsRepository.findProductById(id);
+    
+    return !productDeleted? 'Product deleted successfully.' : 'Product not found.';
+  }
+
   private stockIsAvailable(product: ProductInterface, amount: number): boolean {
     return product.stock >= amount ? true : false;
   }

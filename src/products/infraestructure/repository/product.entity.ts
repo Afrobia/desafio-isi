@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { UpdateCouponsDto } from 'src/coupons/infraestructure/http/dto/update-coupons.dto';
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, PrimaryColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity('products')
 export class ProductEntity {
@@ -12,12 +13,13 @@ export class ProductEntity {
   price: number;
   @Column('int')
   stock: number;
-  @Column('timestamp', { default: () => 'CURRENT_TIMESTAMP' })
+  @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
-  @Column('timestamp', { default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
+  @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   updatedAt: Date;
-  @Column('timestamp', { nullable: true, default: null })
+  @DeleteDateColumn({ type: 'timestamp', nullable: true })
   deletedAt: Date | null;
+ 
 
   constructor(name: string, description: string, price: number, stock: number) {
     this.id = Date.now();

@@ -6,6 +6,7 @@ export interface IProductsRepository {
   findProductById(id: number): Promise<ProductInterface | null>;
   getAllProducts(): Promise<ProductInterface[]>;
   updateProduct(product: ProductInterface): Promise<ProductInterface>;
+  deleteProduct(product:ProductInterface): Promise<void>;
 }
 
 export const PRODUCT_REPO_TOKEN = Symbol();
