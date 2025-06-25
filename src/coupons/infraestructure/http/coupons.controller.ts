@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import {
   COUPONS_SERVICE_TOKEN,
-  ICouponService,
+  ICouponsService,
 } from '../../application/inbound-port/coupon.service.interface';
 import { ICoupon } from '../../domain/coupon.interface';
 import { UpdateCouponsDto } from './dto/update-coupons.dto';
@@ -20,7 +20,7 @@ import { CreateCouponsDto } from './dto/create-coupons.dto';
 export class CouponsController {
   constructor(
     @Inject(COUPONS_SERVICE_TOKEN)
-    private readonly couponsService: ICouponService,
+    private readonly couponsService: ICouponsService,
   ) {}
 
   @Post()

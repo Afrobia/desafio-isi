@@ -1,6 +1,7 @@
 import { TypeCoupons } from "./coupon-enum";
 
 export interface ICoupon {
+    id?: number;
     code?:string;
     type?: TypeCoupons;
     value?:number;
@@ -9,5 +10,6 @@ export interface ICoupon {
     max_uses?:number;
     valid_from?: Date;
     valid_until?: Date;
+    
 }
 

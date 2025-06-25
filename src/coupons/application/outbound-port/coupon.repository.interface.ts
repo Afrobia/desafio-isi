@@ -7,6 +7,7 @@ export interface ICouponsRepository {
   findCouponById(id: number): Promise<ICoupon | null>;
   getAllCoupons(): Promise<ICoupon[]>;
   updateCoupon(coupon: ICoupon): Promise<ICoupon>;
+  countUses(coupon: ICoupon): Promise<void>;
   deleteCoupon(coupon: ICoupon): Promise<ICoupon | null>;
 }
 

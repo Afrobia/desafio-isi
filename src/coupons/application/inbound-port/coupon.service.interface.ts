@@ -1,6 +1,6 @@
 import { ICoupon } from '../../domain/coupon.interface';
 
-export interface ICouponService {
+export interface ICouponsService {
   createCoupon(coupon: ICoupon): Promise<ICoupon | string>;
   getCouponById(id: number): Promise<ICoupon | string>;
   getCouponByCode(code: string): Promise<ICoupon | string>;

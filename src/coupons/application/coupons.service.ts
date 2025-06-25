@@ -3,14 +3,14 @@ import {
   COUPONS_REPO_TOKEN,
   ICouponsRepository,
 } from '../application/outbound-port/coupon.repository.interface';
-import { ICouponService } from './inbound-port/coupon.service.interface';
+import { ICouponsService } from './inbound-port/coupon.service.interface';
 import { ICoupon } from '../domain/coupon.interface';
 import {
   COUPONS_VALID_TOKEN,
   CouponValidate,
 } from './validation/coupons-validation';
 
-export class CouponsService implements ICouponService {
+export class CouponsService implements ICouponsService {
   constructor(
     @Inject(COUPONS_REPO_TOKEN)
     private readonly couponsRepository: ICouponsRepository,
@@ -56,15 +56,23 @@ export class CouponsService implements ICouponService {
     return await this.couponsRepository.getAllCoupons();
   }
 
-  /* private async getCouponByCodeAndValidate(
+   private async getCouponByCodeAndValidate(
     code: string,
   ): Promise<ICoupon | string> {
     const couponFound = (await this.getCouponByCode(code)) as ICoupon;
     if (couponFound.uses_count >= couponFound.max_uses) {
       throw new ForbiddenException(`Coupon has reached its maximum uses.`);
     }
-    return couponFound;
-  } */
+    const coupomUsed = this.countUses(couponFound).then(()=> {
+      return this.couponsRepository.findCouponByCode(code);
+    });
+
+    return coupomUsed
+  } 
+
+  async countUses(coupon: ICoupon): Promise<void> {
+    await this.couponsRepository.countUses(coupon);
+  }
 
   async updateCoupon(code: string, coupon: ICoupon): Promise<ICoupon | string> {
     const { max_uses, valid_until } = coupon;
