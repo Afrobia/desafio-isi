@@ -4,7 +4,8 @@ import { IProductsRepository } from '../../application/outboud-port/products.rep
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
-export class ProductsRepository implements IProductsRepository { constructor(
+export class ProductsRepository implements IProductsRepository { 
+  constructor(
     @InjectRepository(ProductEntity)
     private readonly productsRepository: Repository<ProductEntity>,
   ) {}
@@ -50,7 +51,7 @@ export class ProductsRepository implements IProductsRepository { constructor(
 
   async findProductById(productId: number): Promise<ProductEntity | null> {
     const productFound = await this.productsRepository.findOne({
-      where: { id: productId },
+      where: { id: productId },relations: ['coupons'],
     });
     return !productFound ? null : productFound;
   }
@@ -83,6 +84,12 @@ export class ProductsRepository implements IProductsRepository { constructor(
       .then(() => this.findProductById(product.id));
   }
 
+  async getProductsUsingRelations(productid: number): Promise<ProductInterface> {
+      return this.productsRepository.findOne({
+      where: { id: productid },relations: ['coupons'],
+    });
+  }
+  
   async deleteProduct(product: ProductInterface): Promise<void> {
     const productDeleted = await this.productsRepository.softDelete(product.id);
   }

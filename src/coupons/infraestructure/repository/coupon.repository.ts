@@ -90,6 +90,13 @@ export class CouponsRepository implements ICouponsRepository {
     });
     return !couponFound ? null : couponFound;
   }
+  
+  async countUses(coupon: CouponEntity): Promise<void> {
+    coupon.uses_count++
+    const updatedCoupon = this.updateDeletedAt(coupon);
+    await this.couponsRepository.update({ code: coupon.code }, updatedCoupon);
+
+  }
 
   async getAllCoupons(): Promise<ICoupon[]> {
     const coupons = await this.couponsRepository.find();
