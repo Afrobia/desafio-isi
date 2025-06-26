@@ -1,4 +1,5 @@
-import { ICoupon } from '../domain/coupon.interface';
+import { ICoupon } from "../../../coupons/domain/coupon.interface";
+
 
 export interface ICouponsRepository {
   registerCoupon(coupon: ICoupon): Promise<ICoupon | null>;
@@ -6,6 +7,7 @@ export interface ICouponsRepository {
   findCouponById(id: number): Promise<ICoupon | null>;
   getAllCoupons(): Promise<ICoupon[]>;
   updateCoupon(coupon: ICoupon): Promise<ICoupon>;
+  countUses(coupon: ICoupon): Promise<void>;
   deleteCoupon(coupon: ICoupon): Promise<ICoupon | null>;
 }
 

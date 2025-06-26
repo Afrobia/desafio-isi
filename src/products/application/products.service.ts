@@ -17,7 +17,7 @@ export class ProductsService implements IProductsService {
     product: ProductInterface,
   ): Promise<ProductInterface | string> {
     const { name } = product;
-    await this.getProductByName(name);
+    await this.validateProductByName(name);
     const newProduct = await this.productsRepository.registerProduct(product);
     return newProduct;
   }
@@ -30,18 +30,23 @@ export class ProductsService implements IProductsService {
     return productFound;
   }
 
-  private async getProductByName(
+  private async validateProductByName(
     name: string,
   ): Promise<ProductInterface | string> {
     const productFound = await this.productsRepository.findProductByName(name);
     if (productFound) {
       throw new ForbiddenException(`Product already exists.`);
     }
-    return productFound;
+    return null;
   }
 
   public async listProducts(): Promise<ProductInterface[]> {
     return this.productsRepository.getAllProducts();
+  }
+
+  public async listProductsOutOfStock(): Promise<ProductInterface[]> {
+    const allProducts = await this.productsRepository.getAllProducts();
+    return allProducts.filter((product) => product.stock <= 0);
   }
 
   public async addProductToStock(
@@ -71,6 +76,14 @@ export class ProductsService implements IProductsService {
     const updatedProduct =
       await this.productsRepository.updateProduct(productForUpdate);
     return updatedProduct;
+  }
+
+  async deleteProduct(id: number): Promise<string> {
+    const productForDelete = await this.getProductById(id) as ProductInterface;
+    await this.productsRepository.deleteProduct(productForDelete)
+    const productDeleted = await this.productsRepository.findProductById(id);
+    
+    return !productDeleted? 'Product deleted successfully.' : 'Product not found.';
   }
 
   private stockIsAvailable(product: ProductInterface, amount: number): boolean {

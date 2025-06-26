@@ -6,6 +6,7 @@ export interface IProductsService {
   listProducts(): Promise<ProductInterface[]>;
   addProductToStock(id:number,amount:number): Promise<ProductInterface | string>;
   removeProductFromStock(id:number ,amout:number): Promise<ProductInterface | string>;
+  deleteProduct(id: number): Promise<string>;
 }
 
 export const PRODUCT_SERVICE_TOKEN = Symbol();

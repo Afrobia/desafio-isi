@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Inject, Param, Patch, Post,
+import {Body, Controller, Delete, Get, Inject, Param, Patch, Post,
   } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { ProductInterface } from '../../domain/product.interface';
@@ -52,4 +52,10 @@ export class ProductsController {
       updateProductDto.stock,
     );
   }
+
+  @Delete(':id')
+    deleteProduct(@Param('id') id: number): Promise<string> {
+    return this.productsService.deleteProduct(id )
+  }
+
 }

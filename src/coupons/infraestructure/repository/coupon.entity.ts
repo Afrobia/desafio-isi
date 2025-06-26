@@ -1,6 +1,16 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryColumn, UpdateDateColumn } from 'typeorm';
-import { TypeCoupons } from '../domain/coupon-enum';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  JoinColumn,
+  OneToMany,
+  PrimaryColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { TypeCoupons } from '../../domain/coupon-enum';
 import { Delete } from '@nestjs/common';
+import { ProductEntity } from 'src/products/infraestructure/repository/product.entity';
 
 @Entity('coupons')
 export class CouponEntity {
@@ -28,13 +38,17 @@ export class CouponEntity {
   updatedAt: Date;
   @DeleteDateColumn({ type: 'timestamp', nullable: true })
   deletedAt: Date;
+  @OneToMany(() => ProductEntity, (product) => product.coupons, {
+    cascade: false})
+  @JoinColumn({ name: 'product_id', referencedColumnName: 'id' })
+  product: ProductEntity[]| [];
 
   constructor(
     code: string,
     type: TypeCoupons,
     value: number,
     one_shot: boolean,
-    valid_until: Date
+    valid_until: Date,
   ) {
     this.id = Date.now();
     this.code = code;
@@ -45,8 +59,8 @@ export class CouponEntity {
     this.uses_count = 0;
     this.valid_from = new Date();
     this.valid_until = valid_until;
-    this.createdAt
-    this.updatedAt
+    this.createdAt;
+    this.updatedAt;
     this.deletedAt = null;
   }
 }
