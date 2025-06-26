@@ -61,6 +61,37 @@ export class ProductsService implements IProductsService {
     return updatedProduct;
   }
 
+  async applyDiscountToProduct(
+    product: ProductInterface,
+  ): Promise<ProductInterface | string> {
+    const coupon = product.coupon;
+    let finalPrice = 0
+
+    const { value, type } = coupon;
+    if(type == 'percent'){
+      const discount = product.price * (value / 100);
+      finalPrice = product.price - discount;
+    } else{
+      finalPrice =  product.price - value;
+    }
+
+    product.finalPrice = this.validatePrice(finalPrice) as number;
+    product.discount = {
+      type: coupon.type,
+      value: coupon.value,
+      appliedAt: new Date(),
+    };
+
+    return product;
+  }
+
+  private validatePrice(value: number): string | number {
+    if (value < 0.01) {
+      throw new ForbiddenException('Discount value must be greater than 0.01');
+    }
+    return value;
+  }
+
   public async removeProductFromStock(
     id: number,
     amout: number,
@@ -72,6 +103,15 @@ export class ProductsService implements IProductsService {
       throw new ForbiddenException('Not enough stock available.');
     }
     productForUpdate.stock -= amout;
+    productForUpdate.updatedAt = new Date();
+    const updatedProduct =
+      await this.productsRepository.updateProduct(productForUpdate);
+    return updatedProduct;
+  }
+  
+  async addCouponToProduct(product: ProductInterface): Promise<ProductInterface | string> {
+    const productForUpdate = product
+    productForUpdate.coupon = product.coupon;
     productForUpdate.updatedAt = new Date();
     const updatedProduct =
       await this.productsRepository.updateProduct(productForUpdate);

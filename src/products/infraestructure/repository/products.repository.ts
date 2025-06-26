@@ -66,7 +66,6 @@ export class ProductsRepository implements IProductsRepository {
   async updateProduct(
     product: ProductInterface,
   ): Promise<ProductEntity | null> {
-    console.log('Updating product:', product);
     const updatedProduct = await this.availableStockProduct(
       product as ProductEntity,
     );

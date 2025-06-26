@@ -4,12 +4,11 @@ import {
   DeleteDateColumn,
   Entity,
   JoinColumn,
-  OneToMany,
+  OneToOne,
   PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { TypeCoupons } from '../../domain/coupon-enum';
-import { Delete } from '@nestjs/common';
 import { ProductEntity } from 'src/products/infraestructure/repository/product.entity';
 
 @Entity('coupons')
@@ -38,10 +37,10 @@ export class CouponEntity {
   updatedAt: Date;
   @DeleteDateColumn({ type: 'timestamp', nullable: true })
   deletedAt: Date;
-  @OneToMany(() => ProductEntity, (product) => product.coupons, {
+  @OneToOne(() => ProductEntity, (product) => product.coupons, {
     cascade: false})
   @JoinColumn({ name: 'product_id', referencedColumnName: 'id' })
-  product: ProductEntity[]| [];
+  product: ProductEntity | null;
 
   constructor(
     code: string,
@@ -62,5 +61,6 @@ export class CouponEntity {
     this.createdAt;
     this.updatedAt;
     this.deletedAt = null;
+    this.product = null;
   }
 }

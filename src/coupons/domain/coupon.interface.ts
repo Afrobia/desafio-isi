@@ -1,3 +1,4 @@
+import { ProductInterface } from "src/products/domain/product.interface";
 import { TypeCoupons } from "./coupon-enum";
 
 export interface ICoupon {
@@ -10,6 +11,6 @@ export interface ICoupon {
     max_uses?:number;
     valid_from?: Date;
     valid_until?: Date;
-    
+    product?: ProductInterface
 }
 

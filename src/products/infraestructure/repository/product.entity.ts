@@ -20,7 +20,7 @@ export class ProductEntity {
   updatedAt: Date;
   @DeleteDateColumn({ type: 'timestamp', nullable: true })
   deletedAt: Date | null;
-  @OneToOne(() => CouponEntity, coupons => coupons.product, {
+  @OneToOne(() => CouponEntity, coupon => coupon.product, {
     cascade: false})
   @JoinColumn({ name: 'coupon_id', referencedColumnName: 'id' })
   coupons: CouponEntity | null;
@@ -36,6 +36,7 @@ export class ProductEntity {
     this.createdAt = new Date();
     this.updatedAt = new Date();
     this.deletedAt = null;
+    this.coupons = null;
   }
 
   getId(): number {
