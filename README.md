@@ -19,6 +19,7 @@
 ### Repository
 
 ![link do repositório](https://github.com/Afrobia/desafio-isi)
+- Application is running on: http://localhost:3010
 
 ## Arquitetura Hexagonal
 ![Modelo de Arquitetura](/asset/image.png)
@@ -70,7 +71,20 @@ $ npm run test:e2e
 # test coverage
 $ npm run test:cov
 ```
+```bash
+# create migrations
+$ npm run migration:create
 
+# run migrations
+$ npm run migration:run
+```
+## EM PROGRESSO
+
+- CONTAGEM DE USO DE CUPONS
+- VALIDAR CADO CONTAGEM SEJA EQUIVALENTE A MAXIMA
+- REMOVER DESCONTO DE CUPOM
+- REFINAR MODULO DE DESCONTO
+- APLICAÇÃO DE TESTES, APÓS MODIFICAÇÕES 
 
 ## Support
 
