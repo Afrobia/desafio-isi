@@ -15,6 +15,7 @@
 - NestJs
 - TypeOrm
 - PostgreSQL
+
 ### Repository
 
 ![link do repositório](https://github.com/Afrobia/desafio-isi)
@@ -23,25 +24,31 @@
 ![Modelo de Arquitetura](/asset/image.png)
 
 
-## Modulos         
+## Modulos    
 
 ### Produtos
+#### API routes
 - GET /products                  	Lista paginada com filtros avançados.	     
 - GET /products/{id}             	Detalhes de um produto.
 - POST /products                 	Cria produto. 
 - PATCH /products/{id}           	Atualização parcial via JSON Patch;
 - DELETE /products/{id}          	Inativa (soft-delete) o produto.
-- POST /products/{id}/discount/coupon 	Aplica cupom promocional. 
-- DELETE /products/{id}/discount 	Remove desconto ativo.  
-### Coupons
-GET /coupons     	Lista / busca códigos.
-POST /coupons    	Cria cupom.        
-GET /coupons/{code}	Detalhes de cupom. 
-PATCH /coupons/{code}	Edita (exceto code).
-DELETE /coupons/{code}	Inativa cupom.   
-  
-### Discount
 
+### Coupons
+#### API routes
+- GET /coupons     	Lista / busca códigos.
+- POST /coupons    	Cria cupom.        
+- GET /coupons/{code}	Detalhes de cupom. 
+- PATCH /coupons/{code}	Edita (exceto code).
+- DELETE /coupons/{code}	Inativa cupom.   
+  
+### Discount-application
+#### API routes
+- POST /products/discount/{id} 	Aplica cupom promocional.        
+
+## Entidades DB
+
+![relacionamentos](.\asset\entities.png)
 ## Compile and run the project
 
 ```bash
