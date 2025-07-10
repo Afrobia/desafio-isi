@@ -5,12 +5,15 @@ import {
   IProductsRepository,
 } from './outboud-port/products.repository.interface';
 import { IProductsService } from './inbound-port/products.service.interface';
+import { COUPONS_SERVICE_TOKEN, ICouponsService } from '../../coupons/application/inbound-port/coupon.service.interface';
 
 @Injectable()
 export class ProductsService implements IProductsService {
   constructor(
     @Inject(PRODUCT_REPO_TOKEN)
     private readonly productsRepository: IProductsRepository,
+    @Inject(COUPONS_SERVICE_TOKEN)
+    private readonly couponService: ICouponsService,
   ) {}
 
   async createProductUnregistered(

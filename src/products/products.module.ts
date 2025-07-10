@@ -3,15 +3,16 @@ import { ProductsService } from './application/products.service';
 import { ProductsController } from './infraestructure/http/products.controller';
 import { PRODUCT_SERVICE_TOKEN } from '../products/application/inbound-port/products.service.interface';
 import { RepositoryModule } from '../db/repository.persistence.module';
+import { CouponsModule } from '../coupons/coupons.module';
 
 
 @Module({
-  imports: [RepositoryModule],
+  imports: [RepositoryModule, CouponsModule],
   providers: [
     {
       provide: PRODUCT_SERVICE_TOKEN,
       useClass: ProductsService
-    }
+    },
   ],
   controllers: [ProductsController],
   exports: [PRODUCT_SERVICE_TOKEN]

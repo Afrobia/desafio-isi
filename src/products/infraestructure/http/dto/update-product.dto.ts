@@ -1,6 +1,5 @@
 import { IsNotEmpty, IsNumber, IsOptional, IsString, Matches } from 'class-validator';
 import { CreateProductDto } from './create-product.dto';
-import { RelationCountMetadata } from 'typeorm/metadata/RelationCountMetadata';
 
 
 export class UpdateProductDto extends CreateProductDto {

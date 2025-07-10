@@ -1,0 +1,15 @@
+services:
+  server:
+    build:
+      context: .
+      dockerfile: .Dockerfile
+    image: desafio-isi-server:latest
+    container_name: isi-server
+    environment:
+      - DATABASE_URL=${DB_URL}
+    env_file:
+      - .env
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./src:/app/src

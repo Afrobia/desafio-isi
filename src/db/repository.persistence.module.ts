@@ -8,7 +8,7 @@ import { CouponEntity } from '../coupons/infraestructure/repository/coupon.entit
 import { CouponsRepository } from '../coupons/infraestructure/repository/coupon.repository';
 import { DISCOUNT_REPOSITORY_TOKEN } from '../discount-application/application/outbound-port/discount-repository.interface';
 import { DiscountsRepository } from '../discount-application/repository/discount.repository';
-import { DiscountEntity } from 'src/discount-application/repository/discount.entity';
+import { DiscountEntity } from '../discount-application/repository/discount.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([ProductEntity, CouponEntity,DiscountEntity])],
