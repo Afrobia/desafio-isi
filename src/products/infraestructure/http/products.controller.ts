@@ -5,8 +5,8 @@ import {
   Get,
   Inject,
   Param,
-  Patch,
   Post,
+  Put,
 } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { Product } from '../../domain/product.interface';
@@ -14,6 +14,7 @@ import {
   IProductsService,
   PRODUCT_SERVICE_TOKEN,
 } from '../../application/inbound-port/products.service.interface';
+import { UpdateProductDto } from './dto/update-product.dto';
 
 @Controller('products')
 export class ProductsController {
@@ -23,20 +24,33 @@ export class ProductsController {
   ) {}
 
   @Post()
-  async createProduct(
+  async create(
     @Body() createProductDto: CreateProductDto,
   ): Promise<Product | string> {
     return this.productsService.create(createProductDto);
   }
 
+  @Get('product/:id')
+  async getById(@Param('id') id: number): Promise<Product | string> {
+    return this.productsService.getById(id);
+  }
+
   @Get()
-  async getAllProducts(): Promise<Product[]> {
+  async getAll(): Promise<Product[]> {
     return this.productsService.listAll();
   }
 
-  @Get(':id')
-  async getProductById(@Param('id') id: number): Promise<Product | string> {
-    return this.productsService.getById(id);
+  @Get('out-of-stock')
+  async getOutOfStock(): Promise<Product[]> {
+    return this.productsService.listOutOfStock();
+  }
+
+  @Put(':id')
+  async updateStock(
+    @Param('id') id: number,
+    @Body() updateProductDto: UpdateProductDto,
+  ): Promise<Product | string> {
+    return this.productsService.updateStock(id, updateProductDto);
   }
   /* 
   @Patch(':id')

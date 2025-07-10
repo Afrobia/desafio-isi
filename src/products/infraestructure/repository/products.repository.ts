@@ -37,15 +37,13 @@ export class ProductsRepository implements IProductsRepository {
     return !productFound ? null : productFound;
   }
 
-  async update(product: Product): Promise<UpdateResult | null> {
-    const existingProduct = await this.productsRepository.findOne({
-      where: { id: product.id },
-    });
-    const updatedProduct = await this.productsRepository.update(
+  async update(product: Product): Promise<ProductEntity> {
+    await this.productsRepository.update(
       product.id,
       product,
     );
-    return updatedProduct ? updatedProduct : null;
+    
+    return this.productsRepository.findOne({ where: { id: product.id } });
   }
 
   async delete(product: Product): Promise<void> {

@@ -4,6 +4,8 @@ import { ProductsService } from "./products.service";
 import { CreateProductDto } from "../infraestructure/http/dto/create-product.dto";
 import { ForbiddenException } from "@nestjs/common";
 import { mockProducts } from "../../mock-data";
+import { UpdateProductDto } from "../infraestructure/http/dto/update-product.dto";
+import { Actions } from "../domain/actions.enum";
 
 
 describe('ProductsService', () => {
@@ -98,6 +100,47 @@ describe('ProductsService', () => {
       jest.spyOn(repository, 'findById').mockResolvedValueOnce(null);
       await expect(service.delete(999)).rejects.toThrow(ForbiddenException);
     });
+  });
+
+  describe('listOutOfStock', () => {
+    it('should return products that are out of stock', async () => {
+      const outOfStockProducts = mockProducts.filter(product => product.stock <= 0);
+      jest.spyOn(repository, 'getAll').mockResolvedValueOnce(mockProducts);
+      const result = await service.listOutOfStock();
+      expect(result).toMatchObject(outOfStockProducts);
+    });
+  });
+
+  describe('updateStock', () => {
+    it('should add stock to a product', () => {
+      const initialStock = 10;
+      const amountToAdd = 5;
+      const newStock = service.addProductToStock(initialStock, amountToAdd);
+      expect(newStock).toBe(15);
+    });
+
+    it('should remove stock from a product', () => {
+      const initialStock = 10;
+      const amountToRemove = 5;
+      const newStock = service.removeProductFromStock(initialStock, amountToRemove);
+      expect(newStock).toBe(5);
+    });
+
+    it('should throw an error if removing more stock than available', () => {
+      const initialStock = 10;
+      const amountToRemove = 15;
+      expect(() => service.removeProductFromStock(initialStock, amountToRemove)).toThrow(ForbiddenException);
+    });
+
+    it('should update the stock of a product', async () => {
+      const product = { id: 1, ...createPoduct };
+      const updatedStock: UpdateProductDto = { amount: 20, action: Actions.ADD };
+      jest.spyOn(repository, 'findById').mockResolvedValueOnce(product);
+      jest.spyOn(repository, 'update').mockResolvedValueOnce({ ...product, stock: 30 });
+      const result = await service.updateStock(product.id, updatedStock);
+      expect(result).toMatchObject({ id: product.id, stock: 30 });
+    });
+
   });
 
 });

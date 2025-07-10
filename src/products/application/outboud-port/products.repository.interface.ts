@@ -6,7 +6,7 @@ export interface IProductsRepository {
   findByName(name: string): Promise<Product | null>;
   findById(id: number): Promise<Product | null>;
   getAll(): Promise<Product[]>;
-  update(product: Product): Promise<UpdateResult | null>;
+  update(product: Product): Promise<Product | null>;
   delete(product: Product): Promise<void>;
 }
 
