@@ -24,6 +24,7 @@ describe('ProductsService', () => {
           findByName: jest.fn(),
           getAll: jest.fn(),
           update: jest.fn(),
+          delete: jest.fn(),
         }}],
       }).compile();
 
@@ -81,6 +82,21 @@ describe('ProductsService', () => {
       jest.spyOn(repository, 'getAll').mockResolvedValueOnce(mockProducts);
       const result = await service.listAll();
       expect(result).toMatchObject(mockProducts);
+    });
+  });
+
+  describe('delete', () => {
+    it('should delete a product by id', async () => {
+      const product = { id: 1, ...createPoduct };
+      jest.spyOn(repository, 'findById').mockResolvedValueOnce(product);
+      jest.spyOn(repository, 'delete').mockResolvedValueOnce();
+      const result = await service.delete(product.id);
+      expect(result).toMatchObject({ message: 'Product deleted successfully.' });
+    });
+
+    it('should throw an error if product not found', async () => {
+      jest.spyOn(repository, 'findById').mockResolvedValueOnce(null);
+      await expect(service.delete(999)).rejects.toThrow(ForbiddenException);
     });
   });
 
