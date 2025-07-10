@@ -1,26 +1,10 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString, Matches } from 'class-validator';
-import { CreateProductDto } from './create-product.dto';
+import { IsEnum, IsNumber } from "class-validator";
+import { Actions } from "../../../../products/domain/actions.enum";
 
-
-export class UpdateProductDto extends CreateProductDto {
-  @IsString({ message: 'Code must be a string' })
-  @Matches(/^[a-zA-Z]{5}\d{2}$/, {
-    message:
-      'O campo "code" deve conter 5 letras seguidas por 2 números. Ex: abcde12',
-  })
-  @IsNotEmpty()
-  code: string;
-  
-  @IsOptional()
-  name: string;
-
-  @IsOptional()
-  description: string;
-
-  @IsOptional()
-  price: number;
-
+export class UpdateProductDto {
   @IsNumber()
-  @IsOptional()
-  stock: number;
+  amount: number;
+
+  @IsEnum(Actions)
+  action: Actions;
 }
