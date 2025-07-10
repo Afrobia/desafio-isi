@@ -1,53 +1,55 @@
 import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
-import { ProductInterface } from '../domain/product.interface';
-import {
-  PRODUCT_REPO_TOKEN,
-  IProductsRepository,
-} from './outboud-port/products.repository.interface';
+import { Product } from '../domain/product.interface';
+import { PRODUCT_REPO_TOKEN, IProductsRepository} from './outboud-port/products.repository.interface';
 import { IProductsService } from './inbound-port/products.service.interface';
-import { COUPONS_SERVICE_TOKEN, ICouponsService } from '../../coupons/application/inbound-port/coupon.service.interface';
 
 @Injectable()
 export class ProductsService implements IProductsService {
   constructor(
     @Inject(PRODUCT_REPO_TOKEN)
     private readonly productsRepository: IProductsRepository,
-    @Inject(COUPONS_SERVICE_TOKEN)
-    private readonly couponService: ICouponsService,
   ) {}
 
-  async createProductUnregistered(
-    product: ProductInterface,
-  ): Promise<ProductInterface | string> {
+  async create(product: Product): Promise<Product> {
     const { name } = product;
-    await this.validateProductByName(name);
-    const newProduct = await this.productsRepository.registerProduct(product);
+    await this.nameIsValid(name);
+    const newProduct = await this.productsRepository.register(product);
+    if (!newProduct) {
+      throw new ForbiddenException('Product could not be created.');
+    }
     return newProduct;
   }
 
-  async getProductById(id: number): Promise<ProductInterface | string> {
-    const productFound = await this.productsRepository.findProductById(id);
+  async getById(id: number): Promise<Product> {
+    const productFound = await this.productsRepository.findById(id);
     if (!productFound) {
       throw new ForbiddenException(`Product not found.`);
     }
     return productFound;
   }
 
-  private async validateProductByName(
-    name: string,
-  ): Promise<ProductInterface | string> {
-    const productFound = await this.productsRepository.findProductByName(name);
+  public async listAll(): Promise<Product[]> {
+    return this.productsRepository.getAll();
+  }
+
+  async delete(id: number): Promise<{ message: string }> {
+    const productForDelete = await this.getById(id);
+    await this.productsRepository.delete(productForDelete);
+    const productDeleted = await this.productsRepository.findById(id);
+    if (productDeleted) {
+      throw new ForbiddenException('Product could not be deleted.');
+    }
+    return { message: 'Product deleted successfully.' };
+  }
+
+  async nameIsValid(name: string): Promise<void> {
+    const productFound = await this.productsRepository.findByName(name);
     if (productFound) {
       throw new ForbiddenException(`Product already exists.`);
     }
-    return null;
   }
-
-  public async listProducts(): Promise<ProductInterface[]> {
-    return this.productsRepository.getAllProducts();
-  }
-
-  public async listProductsOutOfStock(): Promise<ProductInterface[]> {
+  /*
+  public async listProductsOutOfStock(): Promise<Product[]> {
     const allProducts = await this.productsRepository.getAllProducts();
     return allProducts.filter((product) => product.stock <= 0);
   }
@@ -55,27 +57,28 @@ export class ProductsService implements IProductsService {
   public async addProductToStock(
     id: number,
     amout: number,
-  ): Promise<ProductInterface | string> {
+  ): Promise<Product | string> {
     const productForUpdate = await this.productsRepository.findProductById(id);
     productForUpdate.stock += amout;
     productForUpdate.updatedAt = new Date();
+    productForUpdate.deletedAt = null;
     const updatedProduct =
       await this.productsRepository.updateProduct(productForUpdate);
     return updatedProduct;
   }
 
   async applyDiscountToProduct(
-    product: ProductInterface,
-  ): Promise<ProductInterface | string> {
+    product: Product,
+  ): Promise<Product> {
     const coupon = product.coupon;
-    let finalPrice = 0
+    let finalPrice = 0;
 
     const { value, type } = coupon;
-    if(type == 'percent'){
+    if (type == 'percent') {
       const discount = product.price * (value / 100);
       finalPrice = product.price - discount;
-    } else{
-      finalPrice =  product.price - value;
+    } else {
+      finalPrice = product.price - value;
     }
 
     product.finalPrice = this.validatePrice(finalPrice) as number;
@@ -88,6 +91,13 @@ export class ProductsService implements IProductsService {
     return product;
   }
 
+  async updateProduct(product: Product): Promise<Product> {
+    product.updatedAt = new Date();
+
+    const updatedProduct = await this.applyDiscountToProduct(product);
+    return updatedProduct;
+  }
+
   private validatePrice(value: number): string | number {
     if (value < 0.01) {
       throw new ForbiddenException('Discount value must be greater than 0.01');
@@ -98,10 +108,10 @@ export class ProductsService implements IProductsService {
   public async removeProductFromStock(
     id: number,
     amout: number,
-  ): Promise<ProductInterface | string> {
+  ): Promise<Product | string> {
     const productForUpdate = (await this.getProductById(
       id,
-    )) as ProductInterface;
+    )) as Product;
     if (!this.stockIsAvailable(productForUpdate, amout)) {
       throw new ForbiddenException('Not enough stock available.');
     }
@@ -111,9 +121,11 @@ export class ProductsService implements IProductsService {
       await this.productsRepository.updateProduct(productForUpdate);
     return updatedProduct;
   }
-  
-  async addCouponToProduct(product: ProductInterface): Promise<ProductInterface | string> {
-    const productForUpdate = product
+
+  async addCouponToProduct(
+    product: Product,
+  ): Promise<Product> {
+    const productForUpdate = product;
     productForUpdate.coupon = product.coupon;
     productForUpdate.updatedAt = new Date();
     const updatedProduct =
@@ -121,15 +133,7 @@ export class ProductsService implements IProductsService {
     return updatedProduct;
   }
 
-  async deleteProduct(id: number): Promise<string> {
-    const productForDelete = await this.getProductById(id) as ProductInterface;
-    await this.productsRepository.deleteProduct(productForDelete)
-    const productDeleted = await this.productsRepository.findProductById(id);
-    
-    return !productDeleted? 'Product deleted successfully.' : 'Product not found.';
-  }
-
-  private stockIsAvailable(product: ProductInterface, amount: number): boolean {
+  private stockIsAvailable(product: Product, amount: number): boolean {
     return product.stock >= amount ? true : false;
-  }
+  } */
 }

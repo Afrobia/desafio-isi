@@ -1,12 +1,19 @@
-import {Body, Controller, Delete, Get, Inject, Param, Patch, Post,
-  } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Inject,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
-import { ProductInterface } from '../../domain/product.interface';
+import { Product } from '../../domain/product.interface';
 import {
   IProductsService,
   PRODUCT_SERVICE_TOKEN,
 } from '../../application/inbound-port/products.service.interface';
-import { UpdateProductDto } from './dto/update-product.dto';
 
 @Controller('products')
 export class ProductsController {
@@ -18,44 +25,41 @@ export class ProductsController {
   @Post()
   async createProduct(
     @Body() createProductDto: CreateProductDto,
-  ): Promise<ProductInterface | string> {
-    return this.productsService.createProductUnregistered(createProductDto);
+  ): Promise<Product | string> {
+    return this.productsService.create(createProductDto);
   }
 
   @Get()
-  async getAllProducts(): Promise<ProductInterface[]> {
-    return this.productsService.listProducts();
+  async getAllProducts(): Promise<Product[]> {
+    return this.productsService.listAll();
   }
 
   @Get(':id')
-  async getProductById(
-    @Param('id') id: number,
-  ): Promise<ProductInterface | string> {
-    return this.productsService.getProductById(id);
+  async getProductById(@Param('id') id: number): Promise<Product | string> {
+    return this.productsService.getById(id);
   }
-
+  /* 
   @Patch(':id')
   async addProductStock(
     @Param('id') id: number,
     @Body() updateProductDto: UpdateProductDto,
-  ): Promise<ProductInterface | string> {
-    return this.productsService.addProductToStock(id, updateProductDto.stock);
+  ): Promise<Product | string> {
+    return this.productsService.addToStock(id, updateProductDto.stock);
   }
 
   @Patch(':id/remove-stock')
   async removeProductStock(
     @Param('id') id: number,
     @Body() updateProductDto: UpdateProductDto,
-  ): Promise<ProductInterface | string> {
-    return this.productsService.removeProductFromStock(
+  ): Promise<Product | string> {
+    return this.productsService.removeFromStock(
       id,
       updateProductDto.stock,
     );
-  }
+  } */
 
   @Delete(':id')
-    deleteProduct(@Param('id') id: number): Promise<string> {
-    return this.productsService.deleteProduct(id )
+  async deleteProduct(@Param('id') id: number): Promise<{ message: string }> {
+    return this.productsService.delete(id);
   }
-
 }

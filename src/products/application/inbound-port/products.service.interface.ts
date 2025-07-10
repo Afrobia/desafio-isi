@@ -1,12 +1,10 @@
-import { ProductInterface } from  '../../domain/product.interface';
+import { Product } from '../../domain/product.interface';
 
 export interface IProductsService {
-  createProductUnregistered(productI: ProductInterface): Promise<ProductInterface | string>;
-  getProductById(id: number): Promise<ProductInterface | string>;
-  listProducts(): Promise<ProductInterface[]>;
-  addProductToStock(id:number,amount:number): Promise<ProductInterface | string>;
-  removeProductFromStock(id:number ,amout:number): Promise<ProductInterface | string>;
-  deleteProduct(id: number): Promise<string>;
+  create(productI: Product): Promise<Product>;
+  getById(id: number): Promise<Product>;
+  listAll(): Promise<Product[]>;
+  delete(id: number): Promise<{ message: string }>;
 }
 
 export const PRODUCT_SERVICE_TOKEN = Symbol();
