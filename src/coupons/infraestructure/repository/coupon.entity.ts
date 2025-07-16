@@ -9,13 +9,14 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { TypeCoupons } from '../../domain/coupon-enum';
-import { ProductEntity } from 'src/products/infraestructure/repository/product.entity';
+import { ProductEntity } from '../../../products/infraestructure/repository/product.entity';
+import { Coupon } from '../../../coupons/domain/coupon.interface';
 
 @Entity('coupons')
-export class CouponEntity {
+export class CouponEntity implements Coupon {
   @PrimaryColumn('bigint', { nullable: false, unique: true })
   id: number;
-  @Column()
+  @Column({ nullable: false, unique: true })
   code: string;
   @Column()
   type: TypeCoupons;
@@ -38,7 +39,8 @@ export class CouponEntity {
   @DeleteDateColumn({ type: 'timestamp', nullable: true })
   deletedAt: Date;
   @OneToOne(() => ProductEntity, (product) => product.coupons, {
-    cascade: false})
+    cascade: false,
+  })
   @JoinColumn({ name: 'product_id', referencedColumnName: 'id' })
   product: ProductEntity | null;
 

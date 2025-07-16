@@ -1,5 +1,5 @@
-import { CouponEntity } from 'src/coupons/infraestructure/repository/coupon.entity';
-import { Product } from 'src/products/domain/product.interface';
+import { CouponEntity } from '../../../coupons/infraestructure/repository/coupon.entity';
+import { Product } from '../../../products/domain/product.interface';
 import {
   Column,
   CreateDateColumn,

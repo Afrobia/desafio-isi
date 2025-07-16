@@ -6,12 +6,14 @@ import { ProductEntity } from '../products/infraestructure/repository/product.en
 import { COUPONS_REPO_TOKEN } from '../coupons/application/outbound-port/coupon.repository.interface';
 import { CouponEntity } from '../coupons/infraestructure/repository/coupon.entity';
 import { CouponsRepository } from '../coupons/infraestructure/repository/coupon.repository';
-import { DISCOUNT_REPOSITORY_TOKEN } from '../discount-application/application/outbound-port/discount-repository.interface';
-import { DiscountsRepository } from '../discount-application/repository/discount.repository';
-import { DiscountEntity } from '../discount-application/repository/discount.entity';
+import { DISCOUNT_REPOSITORY_TOKEN } from '../management/application/outbound-port/discount-repository.interface';
+import { DiscountsRepository } from '../management/repository/discount.repository';
+import { DiscountEntity } from '../management/repository/discount.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ProductEntity, CouponEntity,DiscountEntity])],
+  imports: [
+    TypeOrmModule.forFeature([ProductEntity, CouponEntity, DiscountEntity]),
+  ],
   providers: [
     {
       provide: PRODUCT_REPO_TOKEN,
@@ -23,10 +25,10 @@ import { DiscountEntity } from '../discount-application/repository/discount.enti
     },
     {
       provide: DISCOUNT_REPOSITORY_TOKEN,
-      useClass: DiscountsRepository
-    }
+      useClass: DiscountsRepository,
+    },
   ],
   controllers: [],
-  exports: [PRODUCT_REPO_TOKEN, COUPONS_REPO_TOKEN, DISCOUNT_REPOSITORY_TOKEN]
+  exports: [PRODUCT_REPO_TOKEN, COUPONS_REPO_TOKEN, DISCOUNT_REPOSITORY_TOKEN],
 })
 export class RepositoryModule {}

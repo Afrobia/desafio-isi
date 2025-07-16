@@ -85,87 +85,14 @@ export class ProductsService implements IProductsService {
     return productUpdated;
   }
 
-/*
-  public async addProductToStock(
-    id: number,
-    amout: number,
-  ): Promise<Product | string> {
-    const productForUpdate = await this.productsRepository.findProductById(id);
-    productForUpdate.stock += amout;
-    productForUpdate.updatedAt = new Date();
-    productForUpdate.deletedAt = null;
-    const updatedProduct =
-      await this.productsRepository.updateProduct(productForUpdate);
-    return updatedProduct;
-  }
-
-  async applyDiscountToProduct(
-    product: Product,
+  async CouponToProduct(
+    productUpdate: Product,
   ): Promise<Product> {
-    const coupon = product.coupon;
-    let finalPrice = 0;
-
-    const { value, type } = coupon;
-    if (type == 'percent') {
-      const discount = product.price * (value / 100);
-      finalPrice = product.price - discount;
-    } else {
-      finalPrice = product.price - value;
-    }
-
-    product.finalPrice = this.validatePrice(finalPrice) as number;
-    product.discount = {
-      type: coupon.type,
-      value: coupon.value,
-      appliedAt: new Date(),
-    };
-
-    return product;
-  }
-
-  async updateProduct(product: Product): Promise<Product> {
-    product.updatedAt = new Date();
-
-    const updatedProduct = await this.applyDiscountToProduct(product);
-    return updatedProduct;
-  }
-
-  private validatePrice(value: number): string | number {
-    if (value < 0.01) {
-      throw new ForbiddenException('Discount value must be greater than 0.01');
-    }
-    return value;
-  }
-
-  public async removeProductFromStock(
-    id: number,
-    amout: number,
-  ): Promise<Product | string> {
-    const productForUpdate = (await this.getProductById(
-      id,
-    )) as Product;
-    if (!this.stockIsAvailable(productForUpdate, amout)) {
-      throw new ForbiddenException('Not enough stock available.');
-    }
-    productForUpdate.stock -= amout;
-    productForUpdate.updatedAt = new Date();
+    productUpdate.updatedAt = new Date();
     const updatedProduct =
-      await this.productsRepository.updateProduct(productForUpdate);
+      await this.productsRepository.update(productUpdate);
     return updatedProduct;
   }
-
-  async addCouponToProduct(
-    product: Product,
-  ): Promise<Product> {
-    const productForUpdate = product;
-    productForUpdate.coupon = product.coupon;
-    productForUpdate.updatedAt = new Date();
-    const updatedProduct =
-      await this.productsRepository.updateProduct(productForUpdate);
-    return updatedProduct;
-  }
-
-  private stockIsAvailable(product: Product, amount: number): boolean {
-    return product.stock >= amount ? true : false;
-  } */
 }
+
+

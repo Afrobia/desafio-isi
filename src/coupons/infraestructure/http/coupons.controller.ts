@@ -5,16 +5,16 @@ import {
   Get,
   Inject,
   Param,
-  Patch,
   Post,
+  Put,
 } from '@nestjs/common';
 import {
   COUPONS_SERVICE_TOKEN,
   ICouponsService,
 } from '../../application/inbound-port/coupon.service.interface';
-import { ICoupon } from '../../domain/coupon.interface';
-import { UpdateCouponsDto } from './dto/update-coupons.dto';
+import { Coupon } from '../../domain/coupon.interface';
 import { CreateCouponsDto } from './dto/create-coupons.dto';
+import { RestoreCouponsDto } from './dto/restore-coupons.dto';
 
 @Controller('coupons')
 export class CouponsController {
@@ -24,34 +24,30 @@ export class CouponsController {
   ) {}
 
   @Post()
-  async createCoupon(
+  async create(
     @Body() coupon: CreateCouponsDto,
-  ): Promise<ICoupon | string> {
-    return await this.couponsService.createCoupon(coupon);
+  ): Promise<Coupon> {
+    return await this.couponsService.create(coupon);
   }
 
   @Get(':code')
-  async getCouponByCode(
-    @Param('code') code: string,
-  ): Promise<ICoupon | string> {
-    return await this.couponsService.getCouponByCode(code);
+  async getByCode(@Param('code') code: string): Promise<Coupon | string> {
+    return await this.couponsService.getByCode(code);
   }
 
   @Get()
-  async getAllCoupons(): Promise<ICoupon[]> {
-    return await this.couponsService.listCoupons();
+  async getAll(): Promise<Coupon[]> {
+    return await this.couponsService.listAll();
   }
 
-  @Patch(':code/validate')
-  async updateCoupon(
-    @Param('code') code: string,
-    @Body() coupon: UpdateCouponsDto,
-  ): Promise<ICoupon | string> {
-    return await this.couponsService.updateCoupon(code, coupon);
+  @Post(':code/restore')
+  async restore(@Param('code') code: string, @Body() restoreCoupon: RestoreCouponsDto): Promise<Coupon> {
+    const { valid_until } = restoreCoupon;
+    return await this.couponsService.restore({ code, valid_until });
   }
 
   @Delete(':code')
-  async deleteCoupon(@Param('code') code: string): Promise<string> {
-    return await this.couponsService.removeCoupon(code);
+  async delete(@Param('code') code: string): Promise<{message:string}> {
+    return await this.couponsService.delete(code);
   }
 }

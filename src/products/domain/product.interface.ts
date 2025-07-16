@@ -1,4 +1,4 @@
-import { ICoupon } from 'src/coupons/domain/coupon.interface';
+import { Coupon } from 'src/coupons/domain/coupon.interface';
 
 export interface Product {
   id?: number;
@@ -11,5 +11,5 @@ export interface Product {
   createdAt?: Date;
   updatedAt?: Date;
   deletedAt?: Date | null;
-  coupon?: ICoupon | null;
+  coupon?: Coupon | null;
 }
