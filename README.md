@@ -49,7 +49,8 @@
 
 ## Entidades DB
 
-![relacionamentos](.\asset\entities.png)
+![relacionamentos](asset\DB.png)
+
 ## Compile and run the project
 
 ```bash
