@@ -48,7 +48,8 @@
 - POST /products/discount/{id} 	Aplica cupom promocional.        
 
 ## Entidades DB
-![Relacionamentos](/asset/db-entities.png)
+
+![Entities](/asset/db.png)
 
 ## Compile and run the project
 
