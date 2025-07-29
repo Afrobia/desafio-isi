@@ -49,7 +49,7 @@
 
 ## Entidades DB
 
-![relacionamentos](asset\DB.png)
+![relacionamentos](/asset\DB.png)
 
 ## Compile and run the project
 
