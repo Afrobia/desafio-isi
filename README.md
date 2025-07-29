@@ -18,8 +18,8 @@
 
 ### Repository
 
-![link do repositório](https://github.com/Afrobia/desafio-isi)
-- Application is running on: http://localhost:3010
+
+- Application is running on: http://localhost:3010/e-commerce-isi
 
 ## Arquitetura Hexagonal
 ![Modelo de Arquitetura](/asset/image.png)
