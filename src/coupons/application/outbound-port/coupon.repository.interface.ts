@@ -1,14 +1,13 @@
-import { ICoupon } from "../../../coupons/domain/coupon.interface";
-
+import { Coupon } from '../../../coupons/domain/coupon.interface';
 
 export interface ICouponsRepository {
-  registerCoupon(coupon: ICoupon): Promise<ICoupon | null>;
-  findCouponByCode(code: string): Promise<ICoupon | null>;
-  findCouponById(id: number): Promise<ICoupon | null>;
-  getAllCoupons(): Promise<ICoupon[]>;
-  updateCoupon(coupon: ICoupon): Promise<ICoupon>;
-  countUses(coupon: ICoupon): Promise<void>;
-  deleteCoupon(coupon: ICoupon): Promise<ICoupon | null>;
+  register(coupon: Coupon): Promise<Coupon | null>;
+  findByCode(code: string): Promise<Coupon | null>;
+  findById(id: number): Promise<Coupon | null>;
+  getAll(): Promise<Coupon[]>;
+  update(coupon: Coupon): Promise<Coupon>;
+  restore({ code, valid_until }: { code: string; valid_until: Date }): Promise<Coupon | null>;
+  delete(coupon: Coupon): Promise<void>;
 }
 
 export const COUPONS_REPO_TOKEN = Symbol();

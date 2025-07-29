@@ -1,11 +1,13 @@
-import { ICoupon } from '../../domain/coupon.interface';
+import { Coupon } from '../../domain/coupon.interface';
 
 export interface ICouponsService {
-  createCoupon(coupon: ICoupon): Promise<ICoupon | string>;
-  getCouponById(id: number): Promise<ICoupon | string>;
-  getCouponByCode(code: string): Promise<ICoupon | string>;
-  listCoupons(): Promise<ICoupon[]>;
-  updateCoupon(code: string, coupon: ICoupon): Promise<ICoupon | string>;
-  removeCoupon(code: string): Promise<string>;
+  create(coupon: Coupon): Promise<Coupon>;
+  getById(id: number): Promise<Coupon>;
+  getByCode(code: string): Promise<Coupon>;
+  update(coupon: Coupon): Promise<Coupon>;
+  apply(couponCode: string): Promise<Coupon>;
+  listAll(): Promise<Coupon[]>;
+  restore(restoreCoupon: { code: string; daysToExpire: number }): Promise<Coupon>;
+  delete(code: string): Promise<{message:string}>;
 }
 export const COUPONS_SERVICE_TOKEN = Symbol();

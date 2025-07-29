@@ -11,7 +11,9 @@ import { DiscountsRepository } from '../discount-application/repository/discount
 import { DiscountEntity } from '../discount-application/repository/discount.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ProductEntity, CouponEntity,DiscountEntity])],
+  imports: [
+    TypeOrmModule.forFeature([ProductEntity, CouponEntity, DiscountEntity]),
+  ],
   providers: [
     {
       provide: PRODUCT_REPO_TOKEN,
@@ -23,10 +25,10 @@ import { DiscountEntity } from '../discount-application/repository/discount.enti
     },
     {
       provide: DISCOUNT_REPOSITORY_TOKEN,
-      useClass: DiscountsRepository
-    }
+      useClass: DiscountsRepository,
+    },
   ],
   controllers: [],
-  exports: [PRODUCT_REPO_TOKEN, COUPONS_REPO_TOKEN, DISCOUNT_REPOSITORY_TOKEN]
+  exports: [PRODUCT_REPO_TOKEN, COUPONS_REPO_TOKEN, DISCOUNT_REPOSITORY_TOKEN],
 })
 export class RepositoryModule {}

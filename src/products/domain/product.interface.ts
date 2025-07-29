@@ -1,13 +1,15 @@
-import { ICoupon } from "src/coupons/domain/coupon.interface";
+import { Coupon } from "../../coupons/domain/coupon.interface";
 
-export interface ProductInterface {
-    id?: number;
-    name: string;
-    description: string;
-    price: number;
-    finalPrice?: number;
-    discount?: {}
-    stock:number;
-    updatedAt?: Date;
-    coupon?: ICoupon | null;
+export interface Product {
+  id?: number;
+  name: string;
+  description: string;
+  price: number;
+  finalPrice?: number;
+  discount?: {};
+  stock: number;
+  createdAt?: Date;
+  updatedAt?: Date;
+  deletedAt?: Date | null;
+  coupon?: Coupon | null;
 }

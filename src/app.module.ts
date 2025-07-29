@@ -7,10 +7,14 @@ import { DbModule } from './db/db.module';
 import { CouponsModule } from './coupons/coupons.module';
 import { DiscountApplicationModule } from './discount-application/discount-application.module';
 
-
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
-    DbModule ,ProductsModule, CouponsModule,DiscountApplicationModule],
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
+    DbModule,
+    ProductsModule,
+    CouponsModule,
+    DiscountApplicationModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

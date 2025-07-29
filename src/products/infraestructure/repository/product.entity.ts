@@ -1,9 +1,17 @@
-import { UpdateCouponsDto } from 'src/coupons/infraestructure/http/dto/update-coupons.dto';
-import { CouponEntity } from 'src/coupons/infraestructure/repository/coupon.entity';
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, OneToOne, PrimaryColumn, UpdateDateColumn } from 'typeorm';
+import { DiscountEntity } from '../../../discount-application/repository/discount.entity';
+import { Product } from '../../../products/domain/product.interface';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  OneToOne,
+  PrimaryColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
-@Entity('products')
-export class ProductEntity {
+@Entity('product')
+export class ProductEntity implements Product {
   @PrimaryColumn('bigint', { primary: true, unique: true, nullable: false })
   id: number;
   @Column('varchar', { length: 100 })
@@ -20,12 +28,8 @@ export class ProductEntity {
   updatedAt: Date;
   @DeleteDateColumn({ type: 'timestamp', nullable: true })
   deletedAt: Date | null;
-  @OneToOne(() => CouponEntity, coupon => coupon.product, {
-    cascade: false})
-  @JoinColumn({ name: 'coupon_id', referencedColumnName: 'id' })
-  coupons: CouponEntity | null;
-
- 
+  @OneToOne(() => DiscountEntity, (relationCoupon) => relationCoupon.couponId, { nullable: true })
+  relationCoupon: DiscountEntity | null;
 
   constructor(name: string, description: string, price: number, stock: number) {
     this.id = Date.now();
@@ -36,14 +40,6 @@ export class ProductEntity {
     this.createdAt = new Date();
     this.updatedAt = new Date();
     this.deletedAt = null;
-    this.coupons = null;
-  }
-
-  getId(): number {
-    return this.id;
-  }
-
-  setId(id: number): void {
-    this.id = id;
+    this.relationCoupon = null;
   }
 }

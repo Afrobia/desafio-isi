@@ -5,9 +5,12 @@ import {
   IsNumber,
   IsString,
   Matches,
+  Max,
+  max,
 } from 'class-validator';
 import { TypeCoupons } from '../../../../coupons/domain/coupon-enum';
-import { Type } from 'class-transformer';
+
+import { ApiProperty } from '@nestjs/swagger';
 
 
 export class CreateCouponsDto {
@@ -17,20 +20,38 @@ export class CreateCouponsDto {
       'O campo "code" deve conter 5 letras seguidas por 2 números. Ex: abcde12',
   })
   @IsNotEmpty()
+  @ApiProperty({
+    description: 'Código do cupom de desconto',
+    example: 'abcde12',
+  })
   code: string;
 
   @IsNotEmpty()
+  @ApiProperty()
   type: TypeCoupons.FIXED | TypeCoupons.PERCENTAGE;
 
   @IsNumber()
   @IsNotEmpty()
+  @ApiProperty()
   value: number;
 
   @IsBoolean()
   @IsNotEmpty()
+  @ApiProperty({
+    description: 'Indica se o cupom é de uso único',
+    example: true,
+  })
   one_shot: boolean;
 
-  @Type(() => Date)
-  @IsDate()
-  valid_until: Date;
+  @IsNumber()
+  @IsNotEmpty()
+  @Max(30, {
+    message: 'O campo "valid_until" deve ser um número entre 1 e 30',
+  })
+  @ApiProperty({
+    description: 'Data de validade do cupom em dias',
+    type: Number,
+    example: 12,
+  })
+  daysToExpire: number;
 }

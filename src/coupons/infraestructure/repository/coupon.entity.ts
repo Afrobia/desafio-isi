@@ -3,19 +3,19 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
-  JoinColumn,
   OneToOne,
   PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { TypeCoupons } from '../../domain/coupon-enum';
-import { ProductEntity } from 'src/products/infraestructure/repository/product.entity';
+import { Coupon } from '../../../coupons/domain/coupon.interface';
+import { DiscountEntity } from 'src/discount-application/repository/discount.entity';
 
-@Entity('coupons')
-export class CouponEntity {
+@Entity('coupon')
+export class CouponEntity implements Coupon {
   @PrimaryColumn('bigint', { nullable: false, unique: true })
   id: number;
-  @Column()
+  @Column({ nullable: false, unique: true })
   code: string;
   @Column()
   type: TypeCoupons;
@@ -37,10 +37,8 @@ export class CouponEntity {
   updatedAt: Date;
   @DeleteDateColumn({ type: 'timestamp', nullable: true })
   deletedAt: Date;
-  @OneToOne(() => ProductEntity, (product) => product.coupons, {
-    cascade: false})
-  @JoinColumn({ name: 'product_id', referencedColumnName: 'id' })
-  product: ProductEntity | null;
+  @OneToOne(() => DiscountEntity, (relationProduct) => relationProduct.productId, { nullable: true })
+  relationProduct: DiscountEntity | null;
 
   constructor(
     code: string,
@@ -61,6 +59,6 @@ export class CouponEntity {
     this.createdAt;
     this.updatedAt;
     this.deletedAt = null;
-    this.product = null;
+    this.relationProduct = null;
   }
 }

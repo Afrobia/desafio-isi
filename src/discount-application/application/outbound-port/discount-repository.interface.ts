@@ -1,8 +1,7 @@
-import { IDiscount } from "../../../discount-application/domain/discount.interface";
-
+import { IDiscount } from '../../domain/discount.interface';
 
 export interface IDiscountsRepository {
-  save(productId:number,couponId: number):Promise<IDiscount|null>;
+  save(item: IDiscount): Promise<IDiscount | null>;
   findById(id: number): Promise<IDiscount | null>;
   findAll(): Promise<IDiscount[]>;
   remove(id: number): Promise<void>;

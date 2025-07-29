@@ -1,4 +1,4 @@
-import { CouponEntity } from "src/coupons/infraestructure/repository/coupon.entity";
+import { CouponEntity } from "../../coupons/infraestructure/repository/coupon.entity";
 import { ProductEntity } from "../../products/infraestructure/repository/product.entity";
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, ForeignKey, PrimaryColumn } from "typeorm";
 
@@ -13,7 +13,7 @@ export class DiscountEntity {
     @ForeignKey(() => CouponEntity)
     couponId: number;
     @CreateDateColumn({ type: 'timestamp' })
-    apliedAt: Date;
+    appliedAt: Date;
     @DeleteDateColumn({ type: 'timestamp', nullable: true })
     removedAt: Date | null;
 
@@ -21,7 +21,7 @@ export class DiscountEntity {
         this.id = Date.now();
         this.productId = productId;
         this.couponId = couponId;
-        this.apliedAt = new Date();
+        this.appliedAt = new Date();
         this.removedAt = null;
     }
 }

@@ -1,12 +1,13 @@
-import { ProductInterface } from '../../domain/product.interface';
+import { UpdateResult } from 'typeorm';
+import { Product } from '../../domain/product.interface';
 
 export interface IProductsRepository {
-  registerProduct(product: ProductInterface): Promise<ProductInterface>;
-  findProductByName(name: string): Promise<ProductInterface | null>;
-  findProductById(id: number): Promise<ProductInterface | null>;
-  getAllProducts(): Promise<ProductInterface[]>;
-  updateProduct(product: ProductInterface): Promise<ProductInterface>;
-  deleteProduct(product:ProductInterface): Promise<void>;
+  register(product: Product): Promise<Product>;
+  findByName(name: string): Promise<Product | null>;
+  findById(id: number): Promise<Product | null>;
+  getAll(): Promise<Product[]>;
+  update(product: Product): Promise<Product | null>;
+  delete(product: Product): Promise<void>;
 }
 
 export const PRODUCT_REPO_TOKEN = Symbol();

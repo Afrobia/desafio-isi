@@ -1,10 +1,13 @@
-import { ProductInterface } from 'src/products/domain/product.interface';
+import { Product } from '../../../products/domain/product.interface';
 import { IDiscount } from '../../domain/discount.interface';
 
 export interface IDiscountsService {
-  registerDiscount( productId: number, couponCode: string ): Promise<ProductInterface | string>;
-  removeDiscount(discountId: number): Promise<string>;
-  getDiscounts(): Promise<IDiscount[]>;
+  create(
+    product: Product,
+    couponCode: string,
+  ): Promise<IDiscount>;
+  delete(discountId: number): Promise<string>;
+  getAll(): Promise<IDiscount[]>;
 }
 
 export const DISCOUNT_SERVICE_TOKEN = Symbol();

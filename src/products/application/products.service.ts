@@ -1,81 +1,129 @@
 import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
-import { ProductInterface } from '../domain/product.interface';
-import {
-  PRODUCT_REPO_TOKEN,
-  IProductsRepository,
-} from './outboud-port/products.repository.interface';
+import { Product } from '../domain/product.interface';
+import { PRODUCT_REPO_TOKEN, IProductsRepository} from './outboud-port/products.repository.interface';
 import { IProductsService } from './inbound-port/products.service.interface';
-import { COUPONS_SERVICE_TOKEN, ICouponsService } from '../../coupons/application/inbound-port/coupon.service.interface';
+import { UpdateProductDto } from '../infraestructure/http/dto/update-product.dto';
+import { DISCOUNT_SERVICE_TOKEN, IDiscountsService } from '../../discount-application/application/inbound-port/discount-service.interface';
 
 @Injectable()
 export class ProductsService implements IProductsService {
   constructor(
     @Inject(PRODUCT_REPO_TOKEN)
     private readonly productsRepository: IProductsRepository,
-    @Inject(COUPONS_SERVICE_TOKEN)
-    private readonly couponService: ICouponsService,
+    @Inject(DISCOUNT_SERVICE_TOKEN)
+    private readonly discountsService: IDiscountsService,
   ) {}
 
-  async createProductUnregistered(
-    product: ProductInterface,
-  ): Promise<ProductInterface | string> {
+  async create(product: Product): Promise<Product> {
     const { name } = product;
-    await this.validateProductByName(name);
-    const newProduct = await this.productsRepository.registerProduct(product);
+    await this.nameIsValid(name);
+    const newProduct = await this.productsRepository.register(product);
+    if (!newProduct) {
+      throw new ForbiddenException('Product could not be created.');
+    }
     return newProduct;
   }
 
-  async getProductById(id: number): Promise<ProductInterface | string> {
-    const productFound = await this.productsRepository.findProductById(id);
+  async getById(id: number): Promise<Product> {
+    const productFound = await this.productsRepository.findById(id);
     if (!productFound) {
       throw new ForbiddenException(`Product not found.`);
     }
     return productFound;
   }
 
-  private async validateProductByName(
-    name: string,
-  ): Promise<ProductInterface | string> {
-    const productFound = await this.productsRepository.findProductByName(name);
+  public async listAll(): Promise<Product[]> {
+    return this.productsRepository.getAll();
+  }
+
+  async delete(id: number): Promise<{ message: string }> {
+    const productForDelete = await this.getById(id);
+    await this.productsRepository.delete(productForDelete);
+    const productDeleted = await this.productsRepository.findById(id);
+    if (productDeleted) {
+      throw new ForbiddenException('Product could not be deleted.');
+    }
+    return { message: 'Product deleted successfully.' };
+  }
+
+  private async nameIsValid(name: string): Promise<void> {
+    const productFound = await this.productsRepository.findByName(name);
     if (productFound) {
       throw new ForbiddenException(`Product already exists.`);
     }
-    return null;
   }
-
-  public async listProducts(): Promise<ProductInterface[]> {
-    return this.productsRepository.getAllProducts();
-  }
-
-  public async listProductsOutOfStock(): Promise<ProductInterface[]> {
-    const allProducts = await this.productsRepository.getAllProducts();
+  
+  public async listOutOfStock(): Promise<Product[]> {
+    const allProducts = await this.productsRepository.getAll();
     return allProducts.filter((product) => product.stock <= 0);
   }
 
-  public async addProductToStock(
-    id: number,
-    amout: number,
-  ): Promise<ProductInterface | string> {
-    const productForUpdate = await this.productsRepository.findProductById(id);
-    productForUpdate.stock += amout;
-    productForUpdate.updatedAt = new Date();
+  addProductToStock(stock: number, amount: number):number {
+    
+    return stock += amount
+  }
+
+  removeProductFromStock(stock: number, amount: number): number {
+    const newStock = stock - amount;
+    if (newStock < 0) {
+      throw new ForbiddenException('Not enough stock available.');
+    }
+    return stock -= amount;
+  }
+
+  async updateStock(id: number, productForUpdate: UpdateProductDto): Promise<Product> {
+    const { amount, action } = productForUpdate;
+    const productUpdated = await this.getById(id).then(async (product) => {
+      if (action === 'add') {
+        product.stock = this.addProductToStock(product.stock, amount);
+      } else if (action === 'remove') {
+        product.stock = this.removeProductFromStock(product.stock, amount);
+      }
+      product.updatedAt = new Date();
+      return await this.productsRepository.update(product);
+    });
+    if (!productUpdated) {
+      throw new ForbiddenException('Product could not be updated.');
+    }
+    return productUpdated;
+  }
+
+  async couponToProduct(
+    productUpdate: Product,
+  ): Promise<Product> {
+    productUpdate.updatedAt = new Date();
     const updatedProduct =
-      await this.productsRepository.updateProduct(productForUpdate);
+      await this.productsRepository.update(productUpdate);
     return updatedProduct;
   }
 
-  async applyDiscountToProduct(
-    product: ProductInterface,
-  ): Promise<ProductInterface | string> {
+  async applyDiscount(
+    product: number,
+    couponCode: string
+  ): Promise<Product> {
+    const productFound = await this.getById(product);
+    const discount = await this.discountsService.create(productFound, couponCode);
+    if (!discount) {
+      throw new ForbiddenException('Discount could not be applied.');
+    }
+    productFound.coupon.id = discount.couponId;
+    await this.couponToProduct(productFound);
+    return productFound
+  }
+    
+
+  /* async applyDiscountToProduct(
+    product: Product,
+  ): Promise<Product> {
     const coupon = product.coupon;
-    let finalPrice = 0
+    let finalPrice = 0;
 
     const { value, type } = coupon;
-    if(type == 'percent'){
+    if (type == 'percent') {
       const discount = product.price * (value / 100);
       finalPrice = product.price - discount;
-    } else{
-      finalPrice =  product.price - value;
+    } else {
+      finalPrice = product.price - value;
     }
 
     product.finalPrice = this.validatePrice(finalPrice) as number;
@@ -93,43 +141,7 @@ export class ProductsService implements IProductsService {
       throw new ForbiddenException('Discount value must be greater than 0.01');
     }
     return value;
-  }
-
-  public async removeProductFromStock(
-    id: number,
-    amout: number,
-  ): Promise<ProductInterface | string> {
-    const productForUpdate = (await this.getProductById(
-      id,
-    )) as ProductInterface;
-    if (!this.stockIsAvailable(productForUpdate, amout)) {
-      throw new ForbiddenException('Not enough stock available.');
-    }
-    productForUpdate.stock -= amout;
-    productForUpdate.updatedAt = new Date();
-    const updatedProduct =
-      await this.productsRepository.updateProduct(productForUpdate);
-    return updatedProduct;
-  }
-  
-  async addCouponToProduct(product: ProductInterface): Promise<ProductInterface | string> {
-    const productForUpdate = product
-    productForUpdate.coupon = product.coupon;
-    productForUpdate.updatedAt = new Date();
-    const updatedProduct =
-      await this.productsRepository.updateProduct(productForUpdate);
-    return updatedProduct;
-  }
-
-  async deleteProduct(id: number): Promise<string> {
-    const productForDelete = await this.getProductById(id) as ProductInterface;
-    await this.productsRepository.deleteProduct(productForDelete)
-    const productDeleted = await this.productsRepository.findProductById(id);
-    
-    return !productDeleted? 'Product deleted successfully.' : 'Product not found.';
-  }
-
-  private stockIsAvailable(product: ProductInterface, amount: number): boolean {
-    return product.stock >= amount ? true : false;
-  }
+  } */
 }
+
+

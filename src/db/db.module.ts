@@ -14,8 +14,8 @@ import { DataSource } from 'typeorm';
   
           const config = {
             type: 'postgres',
-            port: 5432,
-            url: configService.get('DB_URL'),
+            port: 5012,
+            url: configService.get('DATABASE_URL'),
             entities: [__dirname + '/../**/*.entity.{ts|js}'],
             autoLoadEntities: true, 
             migrations: [__dirname + '/migrations/*.ts'],

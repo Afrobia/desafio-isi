@@ -1,52 +1,37 @@
-import { Inject, Injectable, Type } from '@nestjs/common';
-import { IDiscount } from '../domain/discount.interface';
-import { IDiscountsService } from './inbound-port/discount-service.interface';
+import { Inject, Injectable } from '@nestjs/common';
 import {
   DISCOUNT_REPOSITORY_TOKEN,
   IDiscountsRepository,
-} from './outbound-port/discount-repository.interface';
-import { PRODUCT_SERVICE_TOKEN } from '../../products/application/inbound-port/products.service.interface';
-import { ProductsService } from '../../products/application/products.service';
-import { COUPONS_SERVICE_TOKEN } from '../../coupons/application/inbound-port/coupon.service.interface';
+} from './outbound-port/discount-repository.interface';;
+import { IDiscount } from '../domain/discount.interface';
+import { Product } from '../../products/domain/product.interface';
 import { CouponsService } from '../../coupons/application/coupons.service';
-import { ProductInterface } from '../../products/domain/product.interface';
-import { ICoupon } from '../../coupons/domain/coupon.interface';
-
 
 @Injectable()
-export class DiscountsService implements IDiscountsService {
-  constructor(
+export class DiscountsService {
+   constructor(
     @Inject(DISCOUNT_REPOSITORY_TOKEN)
     private readonly discountRepository: IDiscountsRepository,
-    @Inject(PRODUCT_SERVICE_TOKEN)
-    private readonly productService: ProductsService,
-    @Inject(COUPONS_SERVICE_TOKEN)
     private readonly couponsService: CouponsService,
+
   ) {}
 
-  async registerDiscount( productId: number,coupomCode: string): Promise<ProductInterface| string> {
-    const product = (await this.productService.getProductById(
-      productId,
-    )) as ProductInterface;
-    const coupon = (await this.couponsService.getCouponByCode(
-      coupomCode,
-    )) as ICoupon;
-    product.coupon = coupon;
-    console.log('Product with coupon:', product);
-    console.log('Coupon:', coupon);
-    if (!product || !coupon) {
-      return 'Product or coupon not found';
+  async create( product: Product ,couponCode: string): Promise<IDiscount> {
+    const coupon = await this.couponsService.apply(couponCode);
+
+    const newDiscount = await this.discountRepository.save({
+      productId: product.id,
+      couponId: coupon.id,
+    });
+    if (!newDiscount) {
+      throw new Error('Discount could not be created.');
     }
-
-    await this.discountRepository.save(
-      product.id,
-      coupon.id,
-    );
-
-    return await this.productService.applyDiscountToProduct(product)
+    await this.couponsService.update(coupon);
+    
+    return newDiscount;
   }
 
-  async removeDiscount(discountId: number): Promise<string> {
+  async delete(discountId: number): Promise<string> {
     await this.discountRepository.remove(discountId);
     
     const discount = await this.discountRepository.findById(discountId);
@@ -55,7 +40,8 @@ export class DiscountsService implements IDiscountsService {
       : 'Discount not found or already removed';
   }
 
-  async getDiscounts(): Promise<IDiscount[]> {
+  async getAll(): Promise<IDiscount[]> {
     return await this.discountRepository.findAll();
   }
+  
 }
