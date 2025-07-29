@@ -48,12 +48,14 @@
 - POST /products/discount/{id} 	Aplica cupom promocional.        
 
 ## Entidades DB
-
-![relacionamentos](/asset/DB.png)
+![Relacionamentos](/asset/db.png)
 
 ## Compile and run the project
 
 ```bash
+# install dependency
+$ npm install
+
 # development
 $ npm run start
 
