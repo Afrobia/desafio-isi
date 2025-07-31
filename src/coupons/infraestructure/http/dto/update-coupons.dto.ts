@@ -1,6 +1,5 @@
-﻿
-import { Type } from "class-transformer";
-import { IsDate, IsNumber, IsOptional} from "class-validator";
+﻿import { Type } from 'class-transformer';
+import { IsDate, IsNumber, IsOptional } from 'class-validator';
 
 export class UpdateCouponsDto {
   @IsOptional()
@@ -10,5 +9,4 @@ export class UpdateCouponsDto {
   @Type(() => Date)
   @IsDate()
   valid_until: Date;
-
 }

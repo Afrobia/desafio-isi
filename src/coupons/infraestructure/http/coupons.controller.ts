@@ -23,15 +23,13 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 export class CouponsController {
   constructor(
     @Inject(COUPONS_SERVICE_TOKEN)
-    private readonly couponsService: ICouponsService,
+    private readonly couponsService: ICouponsService
   ) {}
 
   @Post()
   @ApiOperation({ summary: 'Cria um novo cupom de desconto' })
   @HttpCode(HttpStatus.CREATED)
-  async create(
-    @Body() coupon: CreateCouponsDto,
-  ): Promise<Coupon> {
+  async create(@Body() coupon: CreateCouponsDto): Promise<Coupon> {
     return await this.couponsService.create(coupon);
   }
 
@@ -49,7 +47,10 @@ export class CouponsController {
 
   @Post(':code/restore')
   @ApiOperation({ summary: 'Restaura um cupom de desconto' })
-  async restore(@Param('code') code: string, @Body() restoreCoupon: RestoreCouponsDto): Promise<Coupon> {
+  async restore(
+    @Param('code') code: string,
+    @Body() restoreCoupon: RestoreCouponsDto
+  ): Promise<Coupon> {
     const { daysToExpire } = restoreCoupon;
     return await this.couponsService.restore({ code, daysToExpire });
   }
@@ -57,7 +58,7 @@ export class CouponsController {
   @Delete(':code')
   @ApiOperation({ summary: 'Deleta um cupom de desconto' })
   @HttpCode(HttpStatus.NO_CONTENT)
-  async delete(@Param('code') code: string): Promise<{message:string}> {
+  async delete(@Param('code') code: string): Promise<{ message: string }> {
     return await this.couponsService.delete(code);
   }
 }

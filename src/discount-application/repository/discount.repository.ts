@@ -6,12 +6,15 @@ import { DiscountEntity } from './discount.entity';
 export class DiscountsRepository {
   constructor(
     @InjectRepository(DiscountEntity)
-    private readonly discountRepository: Repository<DiscountEntity>,
+    private readonly discountRepository: Repository<DiscountEntity>
   ) {}
 
   async save(discount: IDiscount): Promise<IDiscount | null> {
-    const discountEntity = new DiscountEntity(discount.productId, discount.couponId);
- 
+    const discountEntity = new DiscountEntity(
+      discount.productId,
+      discount.couponId
+    );
+
     const newDiscount = await this.discountRepository.save(discountEntity);
     if (!newDiscount) {
       return null;
@@ -39,7 +42,9 @@ export class DiscountsRepository {
 
   async findAll(): Promise<IDiscount[]> {
     const discountEntities = await this.discountRepository.find();
-    return Promise.all(discountEntities.map(entity => this.mappingToDomain(entity)));
+    return Promise.all(
+      discountEntities.map(entity => this.mappingToDomain(entity))
+    );
   }
 
   async remove(id: number): Promise<void> {

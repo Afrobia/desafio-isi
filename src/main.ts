@@ -9,12 +9,13 @@ async function bootstrap() {
   const configService = app.get<ConfigService>(ConfigService);
   const APP_PORT = configService.get<number>('PORT', 3010, { infer: true });
 
-
-  app.useGlobalPipes(new ValidationPipe({
+  app.useGlobalPipes(
+    new ValidationPipe({
       transform: true,
       whitelist: true,
       forbidNonWhitelisted: false,
-    }))
+    })
+  );
 
   const configSwagger = new DocumentBuilder()
     .setTitle('e-commerce API')

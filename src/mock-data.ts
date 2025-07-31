@@ -1,6 +1,7 @@
-﻿import { Product } from "./products/domain/product.interface";
+﻿import { Product } from './products/domain/product.interface';
 
-export const mockProducts:Product[] = [{
+export const mockProducts: Product[] = [
+  {
     id: 1,
     name: 'Product 1',
     price: 100,
@@ -11,7 +12,7 @@ export const mockProducts:Product[] = [{
     deletedAt: null,
     coupon: null,
     finalPrice: 100,
-    discount: {}
+    discount: {},
   },
   {
     id: 2,
@@ -24,7 +25,7 @@ export const mockProducts:Product[] = [{
     deletedAt: null,
     coupon: null,
     finalPrice: 200,
-    discount: {}
+    discount: {},
   },
   {
     id: 3,
@@ -37,6 +38,6 @@ export const mockProducts:Product[] = [{
     deletedAt: null,
     coupon: null,
     finalPrice: 300,
-    discount: {}
-  }
-]
+    discount: {},
+  },
+];

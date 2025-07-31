@@ -6,10 +6,13 @@ import { CouponsService } from '../coupons/application/coupons.service';
 
 @Module({
   imports: [RepositoryModule],
-  providers: [{
-    provide: DISCOUNT_SERVICE_TOKEN,
-    useClass: DiscountsService,
-  }, CouponsService],
+  providers: [
+    {
+      provide: DISCOUNT_SERVICE_TOKEN,
+      useClass: DiscountsService,
+    },
+    CouponsService,
+  ],
   exports: [DISCOUNT_SERVICE_TOKEN],
 })
-export class DiscountApplicationModule{}
+export class DiscountApplicationModule {}

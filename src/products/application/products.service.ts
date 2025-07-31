@@ -1,9 +1,15 @@
 ﻿import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
 import { Product } from '../domain/product.interface';
-import { PRODUCT_REPO_TOKEN, IProductsRepository} from './outboud-port/products.repository.interface';
+import {
+  PRODUCT_REPO_TOKEN,
+  IProductsRepository,
+} from './outboud-port/products.repository.interface';
 import { IProductsService } from './inbound-port/products.service.interface';
 import { UpdateProductDto } from '../infraestructure/http/dto/update-product.dto';
-import { DISCOUNT_SERVICE_TOKEN, IDiscountsService } from '../../discount-application/application/inbound-port/discount-service.interface';
+import {
+  DISCOUNT_SERVICE_TOKEN,
+  IDiscountsService,
+} from '../../discount-application/application/inbound-port/discount-service.interface';
 
 @Injectable()
 export class ProductsService implements IProductsService {
@@ -11,7 +17,7 @@ export class ProductsService implements IProductsService {
     @Inject(PRODUCT_REPO_TOKEN)
     private readonly productsRepository: IProductsRepository,
     @Inject(DISCOUNT_SERVICE_TOKEN)
-    private readonly discountsService: IDiscountsService,
+    private readonly discountsService: IDiscountsService
   ) {}
 
   async create(product: Product): Promise<Product> {
@@ -52,15 +58,14 @@ export class ProductsService implements IProductsService {
       throw new ForbiddenException(`Product already exists.`);
     }
   }
-  
+
   public async listOutOfStock(): Promise<Product[]> {
     const allProducts = await this.productsRepository.getAll();
-    return allProducts.filter((product) => product.stock <= 0);
+    return allProducts.filter(product => product.stock <= 0);
   }
 
-  addProductToStock(stock: number, amount: number):number {
-    
-    return stock += amount
+  addProductToStock(stock: number, amount: number): number {
+    return (stock += amount);
   }
 
   removeProductFromStock(stock: number, amount: number): number {
@@ -68,12 +73,15 @@ export class ProductsService implements IProductsService {
     if (newStock < 0) {
       throw new ForbiddenException('Not enough stock available.');
     }
-    return stock -= amount;
+    return (stock -= amount);
   }
 
-  async updateStock(id: number, productForUpdate: UpdateProductDto): Promise<Product> {
+  async updateStock(
+    id: number,
+    productForUpdate: UpdateProductDto
+  ): Promise<Product> {
     const { amount, action } = productForUpdate;
-    const productUpdated = await this.getById(id).then(async (product) => {
+    const productUpdated = await this.getById(id).then(async product => {
       if (action === 'add') {
         product.stock = this.addProductToStock(product.stock, amount);
       } else if (action === 'remove') {
@@ -88,29 +96,25 @@ export class ProductsService implements IProductsService {
     return productUpdated;
   }
 
-  async couponToProduct(
-    productUpdate: Product,
-  ): Promise<Product> {
+  async couponToProduct(productUpdate: Product): Promise<Product> {
     productUpdate.updatedAt = new Date();
-    const updatedProduct =
-      await this.productsRepository.update(productUpdate);
+    const updatedProduct = await this.productsRepository.update(productUpdate);
     return updatedProduct;
   }
 
-  async applyDiscount(
-    product: number,
-    couponCode: string
-  ): Promise<Product> {
+  async applyDiscount(product: number, couponCode: string): Promise<Product> {
     const productFound = await this.getById(product);
-    const discount = await this.discountsService.create(productFound, couponCode);
+    const discount = await this.discountsService.create(
+      productFound,
+      couponCode
+    );
     if (!discount) {
       throw new ForbiddenException('Discount could not be applied.');
     }
     productFound.coupon.id = discount.couponId;
     await this.couponToProduct(productFound);
-    return productFound
+    return productFound;
   }
-    
 
   /* async applyDiscountToProduct(
     product: Product,
@@ -143,5 +147,3 @@ export class ProductsService implements IProductsService {
     return value;
   } */
 }
-
-

@@ -10,10 +10,9 @@ import { CouponsController } from './infraestructure/http/coupons.controller';
     {
       provide: COUPONS_SERVICE_TOKEN,
       useClass: CouponsService,
-    }
+    },
   ],
   controllers: [CouponsController],
   exports: [COUPONS_SERVICE_TOKEN],
 })
-
 export class CouponsModule {}

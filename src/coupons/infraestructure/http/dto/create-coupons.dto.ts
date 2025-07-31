@@ -12,7 +12,6 @@ import { TypeCoupons } from '../../../../coupons/domain/coupon-enum';
 
 import { ApiProperty } from '@nestjs/swagger';
 
-
 export class CreateCouponsDto {
   @IsString({ message: 'Code must be a string' })
   @Matches(/^[a-zA-Z]{5}\d{2}$/, {

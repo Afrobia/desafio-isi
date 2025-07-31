@@ -1,20 +1,22 @@
 ﻿import { Test, TestingModule } from '@nestjs/testing';
 import { CouponsService } from './coupons.service';
-import { COUPONS_REPO_TOKEN, ICouponsRepository} from './outbound-port/coupon.repository.interface';
+import {
+  COUPONS_REPO_TOKEN,
+  ICouponsRepository,
+} from './outbound-port/coupon.repository.interface';
 import { TypeCoupons } from '../domain/coupon-enum';
 import { COUPONS_SERVICE_TOKEN } from './inbound-port/coupon.service.interface';
-
 
 describe('CouponsService', () => {
   let service: CouponsService;
   let repository: ICouponsRepository;
   let mockCoupon = {
-      code: 'test-coupon',
-      type: TypeCoupons.FIXED,
-      value: 100,
-      one_shot: true,
-      valid_until: new Date(),
-    }
+    code: 'test-coupon',
+    type: TypeCoupons.FIXED,
+    value: 100,
+    one_shot: true,
+    valid_until: new Date(),
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -79,7 +81,7 @@ describe('CouponsService', () => {
     jest.spyOn(repository, 'delete').mockResolvedValue();
 
     const result = await service.delete(mockCoupon.code);
-    expect(result).toMatchObject({message: `Coupon deleted successfully.`});
+    expect(result).toMatchObject({ message: `Coupon deleted successfully.` });
   });
 
   test('should restore coupon', async () => {

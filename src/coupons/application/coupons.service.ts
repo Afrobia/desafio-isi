@@ -1,4 +1,4 @@
-﻿import { ForbiddenException, Inject} from '@nestjs/common';
+﻿import { ForbiddenException, Inject } from '@nestjs/common';
 import {
   COUPONS_REPO_TOKEN,
   ICouponsRepository,
@@ -7,11 +7,10 @@ import { ICouponsService } from './inbound-port/coupon.service.interface';
 import { Coupon, NewCoupon, RestoreCoupon } from '../domain/coupon.interface';
 import { TypeCoupons } from '../domain/coupon-enum';
 
-
 export class CouponsService implements ICouponsService {
   constructor(
     @Inject(COUPONS_REPO_TOKEN)
-    private readonly couponsRepository: ICouponsRepository,
+    private readonly couponsRepository: ICouponsRepository
   ) {}
 
   async create(coupon: NewCoupon): Promise<Coupon> {
@@ -36,10 +35,7 @@ export class CouponsService implements ICouponsService {
     const { code } = coupon;
     coupon.code = this.lowCaseCode(code);
 
-    await Promise.all([
-      this.codeIsValid(code),
-      this.valueIsValid(coupon),
-    ]);
+    await Promise.all([this.codeIsValid(code), this.valueIsValid(coupon)]);
   }
 
   async getById(id: number): Promise<Coupon> {
@@ -49,7 +45,7 @@ export class CouponsService implements ICouponsService {
     }
     return couponFound;
   }
-  
+
   async getByCode(code: string): Promise<Coupon> {
     const couponFound = await this.couponsRepository.findByCode(code);
     if (!couponFound) {
@@ -70,7 +66,7 @@ export class CouponsService implements ICouponsService {
     return await this.couponsRepository.getAll();
   }
 
-  async delete(code: string): Promise<{message:string}> {
+  async delete(code: string): Promise<{ message: string }> {
     const couponFound = await this.getByCode(code);
     await this.couponsRepository.delete(couponFound);
     const result = await this.couponsRepository.findById(couponFound.id);
@@ -78,13 +74,16 @@ export class CouponsService implements ICouponsService {
     if (result) {
       throw new ForbiddenException(`Coupon could not be deleted.`);
     }
-    return {message:`Coupon deleted successfully.`};
+    return { message: `Coupon deleted successfully.` };
   }
 
   async restore(restoreCoupon: RestoreCoupon): Promise<Coupon | null> {
-    const { code, daysToExpire } = restoreCoupon
+    const { code, daysToExpire } = restoreCoupon;
     const valid_until = this.validUntil(daysToExpire);
-    const couponFound = await this.couponsRepository.restore({ code: this.lowCaseCode(code), valid_until });
+    const couponFound = await this.couponsRepository.restore({
+      code: this.lowCaseCode(code),
+      valid_until,
+    });
     if (!couponFound) {
       throw new ForbiddenException(`Coupon could not be restored.`);
     }
@@ -131,7 +130,7 @@ export class CouponsService implements ICouponsService {
     if (!updatedCoupon) {
       throw new ForbiddenException(`Coupon could not be updated.`);
     }
-    return updatedCoupon
+    return updatedCoupon;
   }
 
   async validateDate(coupon: Coupon): Promise<void> {
@@ -161,4 +160,3 @@ export class CouponsService implements ICouponsService {
     await this.max_usesIsValid(coupon);
   }
 }
-

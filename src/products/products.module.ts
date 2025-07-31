@@ -11,10 +11,10 @@ import { DiscountApplicationModule } from '../discount-application/discount-appl
   providers: [
     {
       provide: PRODUCT_SERVICE_TOKEN,
-      useClass: ProductsService
+      useClass: ProductsService,
     },
   ],
   controllers: [ProductsController],
-  exports: [PRODUCT_SERVICE_TOKEN]
+  exports: [PRODUCT_SERVICE_TOKEN],
 })
 export class ProductsModule {}

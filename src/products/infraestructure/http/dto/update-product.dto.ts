@@ -1,6 +1,6 @@
-﻿import { IsEnum, IsNumber } from "class-validator";
-import { Actions } from "../../../../products/domain/actions.enum";
-import { ApiProperty } from "@nestjs/swagger";
+﻿import { IsEnum, IsNumber } from 'class-validator';
+import { Actions } from '../../../../products/domain/actions.enum';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateProductDto {
   @IsNumber()

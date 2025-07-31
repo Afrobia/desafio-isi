@@ -7,7 +7,10 @@ export interface ICouponsService {
   update(coupon: Coupon): Promise<Coupon>;
   apply(couponCode: string): Promise<Coupon>;
   listAll(): Promise<Coupon[]>;
-  restore(restoreCoupon: { code: string; daysToExpire: number }): Promise<Coupon>;
-  delete(code: string): Promise<{message:string}>;
+  restore(restoreCoupon: {
+    code: string;
+    daysToExpire: number;
+  }): Promise<Coupon>;
+  delete(code: string): Promise<{ message: string }>;
 }
 export const COUPONS_SERVICE_TOKEN = Symbol();

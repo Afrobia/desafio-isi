@@ -7,7 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 export class ProductsRepository implements IProductsRepository {
   constructor(
     @InjectRepository(ProductEntity)
-    private readonly productsRepository: Repository<ProductEntity>,
+    private readonly productsRepository: Repository<ProductEntity>
   ) {}
 
   async register(productModel: Product): Promise<ProductEntity> {
@@ -29,8 +29,11 @@ export class ProductsRepository implements IProductsRepository {
     return !productFound ? null : productFound;
   }
 
-   async findWithCouponUsingQueryBuilder(productId: number): Promise<ProductEntity | null> {
-    return this.productsRepository.createQueryBuilder('product')
+  async findWithCouponUsingQueryBuilder(
+    productId: number
+  ): Promise<ProductEntity | null> {
+    return this.productsRepository
+      .createQueryBuilder('product')
       .leftJoinAndSelect('product.coupon', 'coupon')
       .where('product.id = :id', { id: productId })
       .getOne();
@@ -44,11 +47,8 @@ export class ProductsRepository implements IProductsRepository {
   }
 
   async update(product: Product): Promise<ProductEntity> {
-    await this.productsRepository.update(
-      product.id,
-      product,
-    );
-    
+    await this.productsRepository.update(product.id, product);
+
     return this.productsRepository.findOne({ where: { id: product.id } });
   }
 

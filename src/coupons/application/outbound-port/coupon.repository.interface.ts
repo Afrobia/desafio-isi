@@ -6,7 +6,13 @@ export interface ICouponsRepository {
   findById(id: number): Promise<Coupon | null>;
   getAll(): Promise<Coupon[]>;
   update(coupon: Coupon): Promise<Coupon>;
-  restore({ code, valid_until }: { code: string; valid_until: Date }): Promise<Coupon | null>;
+  restore({
+    code,
+    valid_until,
+  }: {
+    code: string;
+    valid_until: Date;
+  }): Promise<Coupon | null>;
   delete(coupon: Coupon): Promise<void>;
 }
 

@@ -6,10 +6,11 @@
 [circleci-url]: https://circleci.com/gh/nestjs/nest
 
 # Isis-commerce-API - Desafio Isi
- Processo seletivo para a vaga de Desenvolvedor Fullstack Júnior.
 
- Projeto Back-end - API
-   
+Processo seletivo para a vaga de Desenvolvedor Fullstack Júnior.
+
+Projeto Back-end - API
+
 ## Ferramentas
 
 - NestJs
@@ -18,34 +19,39 @@
 
 ### Repository
 
-
 - Application is running on: http://localhost:3010/e-commerce-isi
 
 ## Arquitetura Hexagonal
+
 ![Modelo de Arquitetura](/asset/image.png)
 
-
-## Modulos    
+## Modulos
 
 ### Produtos
+
 #### API routes
-- GET /products                  	Lista paginada com filtros avançados.	     
-- GET /products/{id}             	Detalhes de um produto.
-- POST /products                 	Cria produto. 
-- PATCH /products/{id}           	Atualização parcial via JSON Patch;
-- DELETE /products/{id}          	Inativa (soft-delete) o produto.
+
+- GET /products Lista paginada com filtros avançados.
+- GET /products/{id} Detalhes de um produto.
+- POST /products Cria produto.
+- PATCH /products/{id} Atualização parcial via JSON Patch;
+- DELETE /products/{id} Inativa (soft-delete) o produto.
 
 ### Coupons
+
 #### API routes
-- GET /coupons     	Lista / busca códigos.
-- POST /coupons    	Cria cupom.        
-- GET /coupons/{code}	Detalhes de cupom. 
-- PATCH /coupons/{code}	Edita (exceto code).
-- DELETE /coupons/{code}	Inativa cupom.   
-  
+
+- GET /coupons Lista / busca códigos.
+- POST /coupons Cria cupom.
+- GET /coupons/{code} Detalhes de cupom.
+- PATCH /coupons/{code} Edita (exceto code).
+- DELETE /coupons/{code} Inativa cupom.
+
 ### Discount-application
+
 #### API routes
-- POST /products/discount/{id} 	Aplica cupom promocional.        
+
+- POST /products/discount/{id} Aplica cupom promocional.
 
 ## Entidades DB
 
@@ -53,7 +59,7 @@
 
 ## Compile and run the project
 
-```bash
+````bash
 # install dependency
 $ npm install
 
@@ -74,7 +80,8 @@ $ npm run test:e2e
 
 # test coverage
 $ npm run test:cov
-```
+````
+
 ```bash
 # create migrations
 $ npm run migration:create
@@ -82,24 +89,25 @@ $ npm run migration:create
 # run migrations
 $ npm run migration:run
 ```
+
 ## EM PROGRESSO
 
 - CONTAGEM DE USO DE CUPONS
 - VALIDAR CADO CONTAGEM SEJA EQUIVALENTE A MAXIMA
 - REMOVER DESCONTO DE CUPOM
 - REFINAR MODULO DE DESCONTO
-- APLICAÇÃO DE TESTES, APÓS MODIFICAÇÕES 
+- APLICAÇÃO DE TESTES, APÓS MODIFICAÇÕES
 
 ## Support
 
 Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
 
-## 
+##
 
 - Author - [Beatriz Santana Silva](https://www.linkedin.com/in/beatriz-santana-dev/)
-
 
 ## License
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+
 # desafio-isi-front

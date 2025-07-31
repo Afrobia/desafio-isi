@@ -28,7 +28,9 @@ export class ProductEntity implements Product {
   updatedAt: Date;
   @DeleteDateColumn({ type: 'timestamp', nullable: true })
   deletedAt: Date | null;
-  @OneToOne(() => DiscountEntity, (relationCoupon) => relationCoupon.couponId, { nullable: true })
+  @OneToOne(() => DiscountEntity, relationCoupon => relationCoupon.couponId, {
+    nullable: true,
+  })
   relationCoupon: DiscountEntity | null;
 
   constructor(name: string, description: string, price: number, stock: number) {

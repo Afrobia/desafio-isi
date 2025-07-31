@@ -37,7 +37,11 @@ export class CouponEntity implements Coupon {
   updatedAt: Date;
   @DeleteDateColumn({ type: 'timestamp', nullable: true })
   deletedAt: Date;
-  @OneToOne(() => DiscountEntity, (relationProduct) => relationProduct.productId, { nullable: true })
+  @OneToOne(
+    () => DiscountEntity,
+    relationProduct => relationProduct.productId,
+    { nullable: true }
+  )
   relationProduct: DiscountEntity | null;
 
   constructor(
@@ -45,7 +49,7 @@ export class CouponEntity implements Coupon {
     type: TypeCoupons,
     value: number,
     one_shot: boolean,
-    valid_until: Date,
+    valid_until: Date
   ) {
     this.id = Date.now();
     this.code = code;

@@ -6,26 +6,27 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ConflictException, ForbiddenException } from '@nestjs/common';
 
 export class CouponsRepository implements ICouponsRepository {
-  
   constructor(
     @InjectRepository(CouponEntity)
-    private readonly couponsRepository: Repository<CouponEntity>,
+    private readonly couponsRepository: Repository<CouponEntity>
   ) {}
 
   async register(coupon: Coupon): Promise<Coupon | null> {
     const { code, type, value, one_shot, valid_until } = coupon;
-    await this.couponsRepository.findOne({ where: { code }, withDeleted: true }).then(existingCoupon => {
-      if (existingCoupon) {
-        throw new ConflictException(`Coupon with code already exists.`);
-      }
-    });
+    await this.couponsRepository
+      .findOne({ where: { code }, withDeleted: true })
+      .then(existingCoupon => {
+        if (existingCoupon) {
+          throw new ConflictException(`Coupon with code already exists.`);
+        }
+      });
 
     const newCoupon = new CouponEntity(
       code,
       type,
       value,
       one_shot,
-      valid_until,
+      valid_until
     );
     newCoupon.max_uses = this.isOneShot(newCoupon).max_uses;
     await this.couponsRepository.save(newCoupon);
@@ -73,8 +74,10 @@ export class CouponsRepository implements ICouponsRepository {
     return await this.findById(id);
   }
 
-  async restore(restoreCoupon: { code: string; valid_until: Date }): Promise<Coupon | null> {
-
+  async restore(restoreCoupon: {
+    code: string;
+    valid_until: Date;
+  }): Promise<Coupon | null> {
     await this.couponsRepository.restore({
       code: restoreCoupon.code,
     });
@@ -86,7 +89,7 @@ export class CouponsRepository implements ICouponsRepository {
     couponFound.valid_from = new Date();
     couponFound.valid_until = restoreCoupon.valid_until;
     couponFound.uses_count = 0;
-    
+
     await this.update(couponFound);
     return couponFound;
   }

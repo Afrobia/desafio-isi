@@ -2,10 +2,7 @@
 import { IDiscount } from '../../domain/discount.interface';
 
 export interface IDiscountsService {
-  create(
-    product: Product,
-    couponCode: string,
-  ): Promise<IDiscount>;
+  create(product: Product, couponCode: string): Promise<IDiscount>;
   delete(discountId: number): Promise<string>;
   getAll(): Promise<IDiscount[]>;
 }
