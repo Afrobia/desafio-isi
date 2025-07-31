@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+﻿import { Module } from '@nestjs/common';
 import { RepositoryModule } from '../db/repository.persistence.module';
 import { COUPONS_SERVICE_TOKEN } from './application/inbound-port/coupon.service.interface';
 import { CouponsService } from './application/coupons.service';

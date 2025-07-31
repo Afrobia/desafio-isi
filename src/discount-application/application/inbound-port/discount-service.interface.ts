@@ -1,4 +1,4 @@
-import { Product } from '../../../products/domain/product.interface';
+﻿import { Product } from '../../../products/domain/product.interface';
 import { IDiscount } from '../../domain/discount.interface';
 
 export interface IDiscountsService {

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+﻿import { Module } from '@nestjs/common';
 import { ProductsService } from './application/products.service';
 import { ProductsController } from './infraestructure/http/products.controller';
 import { PRODUCT_SERVICE_TOKEN } from '../products/application/inbound-port/products.service.interface';

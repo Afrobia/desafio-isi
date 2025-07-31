@@ -1,4 +1,4 @@
-services:
+﻿services:
   postgres:
     image: postgres:11.7-alpine
     container_name: ecommerce-postgres-db

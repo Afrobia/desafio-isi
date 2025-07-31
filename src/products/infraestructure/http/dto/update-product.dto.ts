@@ -1,4 +1,4 @@
-import { IsEnum, IsNumber } from "class-validator";
+﻿import { IsEnum, IsNumber } from "class-validator";
 import { Actions } from "../../../../products/domain/actions.enum";
 import { ApiProperty } from "@nestjs/swagger";
 

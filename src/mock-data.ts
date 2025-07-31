@@ -1,4 +1,4 @@
-import { Product } from "./products/domain/product.interface";
+﻿import { Product } from "./products/domain/product.interface";
 
 export const mockProducts:Product[] = [{
     id: 1,

@@ -1,4 +1,4 @@
-import { DiscountEntity } from '../../../discount-application/repository/discount.entity';
+﻿import { DiscountEntity } from '../../../discount-application/repository/discount.entity';
 import { Product } from '../../../products/domain/product.interface';
 import {
   Column,

@@ -1,4 +1,4 @@
-import { UpdateResult } from 'typeorm';
+﻿import { UpdateResult } from 'typeorm';
 import { Product } from '../../domain/product.interface';
 
 export interface IProductsRepository {

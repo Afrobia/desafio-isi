@@ -1,4 +1,4 @@
-import { IDiscount } from '../../domain/discount.interface';
+﻿import { IDiscount } from '../../domain/discount.interface';
 
 export interface IDiscountsRepository {
   save(item: IDiscount): Promise<IDiscount | null>;

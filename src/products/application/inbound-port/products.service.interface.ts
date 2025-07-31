@@ -1,4 +1,4 @@
-import { UpdateProductDto } from '../../../products/infraestructure/http/dto/update-product.dto';
+﻿import { UpdateProductDto } from '../../../products/infraestructure/http/dto/update-product.dto';
 import { Product } from '../../domain/product.interface';
 
 export interface IProductsService {

@@ -1,4 +1,4 @@
-import { MigrationInterface, QueryRunner } from "typeorm";
+﻿import { MigrationInterface, QueryRunner } from "typeorm";
 
 export class StockProducts1750547382554 implements MigrationInterface {
 

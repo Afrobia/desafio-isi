@@ -1,4 +1,4 @@
-export enum TypeCoupons {
+﻿export enum TypeCoupons {
   PERCENTAGE = 'percent',
   FIXED = 'fixed',
 }

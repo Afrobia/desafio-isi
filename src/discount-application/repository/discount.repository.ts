@@ -1,4 +1,4 @@
-import { InjectRepository } from '@nestjs/typeorm';
+﻿import { InjectRepository } from '@nestjs/typeorm';
 import { IDiscount } from '../domain/discount.interface';
 import { Repository } from 'typeorm';
 import { DiscountEntity } from './discount.entity';

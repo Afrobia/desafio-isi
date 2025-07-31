@@ -1,4 +1,4 @@
-import { Coupon } from '../../domain/coupon.interface';
+﻿import { Coupon } from '../../domain/coupon.interface';
 
 export interface ICouponsService {
   create(coupon: Coupon): Promise<Coupon>;

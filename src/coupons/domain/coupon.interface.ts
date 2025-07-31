@@ -1,4 +1,4 @@
-import { Product } from 'src/products/domain/product.interface';
+﻿import { Product } from 'src/products/domain/product.interface';
 import { TypeCoupons } from './coupon-enum';
 
 export interface Coupon {

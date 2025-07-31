@@ -1,4 +1,4 @@
-import { CouponEntity } from "../../coupons/infraestructure/repository/coupon.entity";
+﻿import { CouponEntity } from "../../coupons/infraestructure/repository/coupon.entity";
 import { ProductEntity } from "../../products/infraestructure/repository/product.entity";
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, ForeignKey, PrimaryColumn } from "typeorm";
 

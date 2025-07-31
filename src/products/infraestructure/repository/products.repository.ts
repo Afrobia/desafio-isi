@@ -1,4 +1,4 @@
-import { Product } from '../../../products/domain/product.interface';
+﻿import { Product } from '../../../products/domain/product.interface';
 import { ProductEntity } from '../../../products/infraestructure/repository/product.entity';
 import { IProductsRepository } from '../../application/outboud-port/products.repository.interface';
 import { Repository } from 'typeorm';

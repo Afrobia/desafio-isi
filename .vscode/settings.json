@@ -1,0 +1,81 @@
+﻿{
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit"
+  },
+
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+  "files.trimTrailingWhitespace": true,
+  "files.eol": "\n",
+
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[yaml]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[yml]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "files.trimTrailingWhitespace": false
+  },
+
+  "terminal.integrated.enableMultiLinePasteWarning": "never",
+  "terminal.integrated.defaultProfile.windows": "PowerShell",
+  "terminal.integrated.env.windows": {},
+  "terminal.integrated.env.osx": {},
+
+  "jestrunner.codeLensSelector": "/*.{test,spec,e2e-spec}.{js,jsx,ts,tsx}",
+  "jest.runMode": {
+    "onStartup": ["all-tests"]
+  },
+
+  "sonarlint.rules": {
+    "typescript:S1172": {
+      "level": "off"
+    }
+  },
+
+  "liveServer.settings.donotVerifyTags": true,
+  "liveServer.settings.donotShowInfoMsg": true,
+  "console-ninja.featureSet": "Community",
+  "console-ninja.warnOnNoToolsDetected": false,
+  "prisma.showPrismaDataPlatformNotification": false,
+  "github.copilot.editor.enableAutoCompletions": true,
+  "github.copilot.advanced": {},
+  "diffEditor.codeLens": true,
+  "geminicodeassist.project": "",
+
+  "docker.images.label": "CreatedTime",
+  "docker.containers.label": "CreatedTime",
+
+  "files.associations": {
+    "*.prisma": "prisma",
+    "docker-compose*.yml": "dockercompose",
+    "Dockerfile*": "dockerfile"
+  },
+
+  "files.autoSave": "onWindowChange",
+
+  "typescript.preferences.includePackageJsonAutoImports": "auto",
+  "typescript.suggest.autoImports": true,
+
+  "git.autofetch": true,
+  "git.confirmSync": false,
+  "git.enableSmartCommit": true
+}
